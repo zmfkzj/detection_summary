@@ -1,0 +1,11 @@
+Metadata-Version: 1.2
+Name: dtsummary
+Version: 0.0.1
+Summary: 디텍션 결과를 정리하기 위한 모듈
+Home-page: UNKNOWN
+Author: zmfkzj
+Author-email: qlwlal@naver.com
+License: UNKNOWN
+Description: UNKNOWN
+Platform: UNKNOWN
+Requires-Python: >=3.8
