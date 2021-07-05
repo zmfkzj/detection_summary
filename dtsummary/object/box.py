@@ -21,7 +21,7 @@ class Bbox:
             self._coco_box = coco_box
             self._cal_coco_box(coco_box,image_size)
         else:
-            Exception('please enter at least one bbox argument')
+            raise Exception('please enter at least one bbox argument')
 
     def _cal_yolo_box(self,yolo_box,image_size):
         '''
@@ -163,6 +163,3 @@ class Bbox:
 
     @property
     def coco(self): return self.x1_a, self.y1_a, self.w_a, self.h_a
-
-if __name__=='__main__':
-    a = Bbox('zmfkzj',(1000,600))

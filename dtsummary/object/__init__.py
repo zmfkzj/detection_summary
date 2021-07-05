@@ -1,4 +1,4 @@
 from .box import Bbox
 from .image import DetectImage
-from .polygon import Polygon
+from .mask import Mask
 from .dataset import DetectDataset

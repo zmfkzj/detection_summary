@@ -2,32 +2,31 @@ from operator import itemgetter
 
 from .image import DetectImage
 from .box import Bbox
-from .polygon import Polygon
+from .mask import Mask
 
-from typing import List, Union
+from typing import List
 from copy import deepcopy
 from functools import reduce
 
+import chardet
 import json
 
 class DetectDataset:
     '''
     collection of DetectImage
     '''
-    def __init__(self, images_data:List[dict]=None, path:str=None, categories:List[str]=None) -> None:
+    def __init__(self, images_data:List[dict]=None, dt_path:str=None) -> None:
         if images_data:
             self.set_item(images_data)
-        elif path:
-            self._load_detection_results(path)
+        elif dt_path:
+            self._load_detection_results(dt_path)
         else:
-            self._items = []
+            self._items:List[DetectImage] = []
 
-        if categories:
-            self._categories = categories
-        elif self._items:
+        if self._items:
             self._get_categories_from_items()
         else:
-            self._categories = []
+            self._categories:str = []
 
     def __iter__(self): return iter(self._items)
     def __len__(self): return len(self._items)
@@ -40,7 +39,7 @@ class DetectDataset:
         image_size = sizegetter(image_data['image_size'])
         image = DetectImage(filename=filename,
                             image_size=image_size,
-                            objects_data=objects_data
+                            dt_objects_data=objects_data,
                             )
         self._items.append(image)
     
@@ -57,12 +56,21 @@ class DetectDataset:
             images_data = json.load(f)
         self.set_item(images_data)
 
+    def _load_gt(self, path):
+        with open(path,'r',encoding='utf-8') as f:
+            images_data = json.load(f)
+        self.set_item(images_data)
+
     def _get_categories_from_items(self):
         labels = [[box.label for box in image] for image in self._items ]
         self._categories = list(set(reduce(lambda x,y: x+y,labels)))
 
-    def to_coco_result(self, gt_path,type):
-        with open(gt_path, 'r',encoding='utf-8') as f:
+    def to_coco_result(self, gt_path):
+        with open(gt_path, 'r') as f:
+            gt = f.readline()
+        encoding = chardet.detect(gt.encode())['encoding']
+
+        with open(gt_path, 'r',encoding=encoding) as f:
             gt = json.load(f)
 
         gt_labels:list = gt['categories']
@@ -81,30 +89,26 @@ class DetectDataset:
             gt_image_name = [gt_image for gt_image in gt_images_name_id_dict if (gt_image.rfind(image.filename)!=-1) | (image.filename.rfind(gt_image) != -1)]
             if len(gt_image_name)==1:
                 gt_image_name = gt_image_name[0]
-            elif len(gt_image_name)>1:
-                Exception('gt와 dt의 이미지 파일명을 매칭하지 못했습니다.')
             else:
-                continue
+                raise Exception('gt와 dt의 이미지 파일명을 매칭하지 못했습니다.')
 
             image_id = gt_images_name_id_dict[gt_image_name]
-            for obj in image:
+            for obj in image.dt:
                 category_id = gt_labels_name_id_dict[obj.label]
-                if type=='bbox':
+                if isinstance(obj,Bbox):
                     new_result_base = deepcopy(coco_result_bbox_base)
                     new_result_base['bbox'] = obj.coco
-                elif type=='seg':
+                elif isinstance(obj,Mask):
                     new_result_base = deepcopy(coco_result_seg_base)
                     new_result_base['segmentation'] = {'size':image.size,
-                                                        'counts':obj.encoded_mask}
+                                                        'counts':obj.rle}
                 else:
-                    Exception('"type" argument must be one of "bbox" or "seg"')
+                    raise Exception('DetectImage 안에 Bbox, Mask가 아닌 다른 클래스의 인스턴스가 들어 있습니다')
                 new_result_base['image_id'] = image_id
                 new_result_base['category_id'] = category_id
                 new_result_base['score'] = obj.confidence
                 dt_results.append(new_result_base)
         
-        with open('detection_result_COCOeval_utf-8.json','w', encoding='utf-8') as f:
-            json.dump(dt_results,f,ensure_ascii=False,indent=4)
         with open('detection_result_COCOeval_cp949.json','w', encoding='cp949') as f:
             json.dump(dt_results,f,ensure_ascii=False,indent=4)
 
@@ -145,7 +149,7 @@ class DetectDataset:
             if len(gt_image_name)==1:
                 gt_image_name = gt_image_name[0]
             elif len(gt_image_name)>1:
-                Exception('gt와 dt의 이미지 파일명을 매칭하지 못했습니다.')
+                raise Exception('gt와 dt의 이미지 파일명을 매칭하지 못했습니다.')
             else:
                 continue
             gt_id = gt_images_name_id_dict[gt_image_name]
@@ -156,13 +160,13 @@ class DetectDataset:
             new_image['file_name'] = image.filename
             new_base['images'].append(new_image)
 
-            for anno in image:
+            for anno in image.dt:
                 new_annotations = deepcopy(coco_annotations_base)
                 new_annotations['id'] = anno_id
                 new_annotations['image_id'] = gt_id
                 new_annotations['category_id'] = labels_name_id_dict[anno.label]
-                if isinstance(anno,Polygon):
-                    new_annotations['segmentation'] = [anno.points]
+                if isinstance(anno,Mask):
+                    new_annotations['segmentation'] = [anno.polygons]
                 elif isinstance(anno, Bbox):
                     new_annotations['bbox'] = anno.coco
                 new_annotations['area'] = anno.area_a
