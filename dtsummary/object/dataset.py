@@ -35,7 +35,7 @@ class DetectDataset:
     def append(self, image_data:dict):
         filename = image_data['filename']
         objects_data = image_data['objects']
-        sizegetter = itemgetter('height','width')
+        sizegetter = itemgetter('h_r','w_r')
         image_size = sizegetter(image_data['image_size'])
         image = DetectImage(filename=filename,
                             image_size=image_size,
@@ -62,7 +62,7 @@ class DetectDataset:
         self.set_item(images_data)
 
     def _get_categories_from_items(self):
-        labels = [[box.label for box in image] for image in self._items ]
+        labels = [[box.label for box in image.dt] for image in self._items ]
         self._categories = list(set(reduce(lambda x,y: x+y,labels)))
 
     def to_coco_result(self, gt_path):

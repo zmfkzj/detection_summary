@@ -46,6 +46,7 @@ class _DetectImage:
     def __repr__(self): return repr(self._items)
 
     def append(self, object_data:dict):
+        assert set(['yolo_bbox', 'voc_bbox','coco_bbox']) & set(object_data), 'type argument is one of "[yolo voc coco]_bbox" or "mask"'
         for key in object_data:
             if key=='yolo_bbox':
                 boxgetter = itemgetter('xc_r','yc_r','w_r','h_r')
@@ -63,7 +64,7 @@ class _DetectImage:
                 obj_cls = Mask
                 kwdarg = {'mask':object_data['mask']}
             else:
-                raise TypeError('type argument is one of "[yolo voc coco]_bbox" or "mask"')
+                pass
         object = obj_cls(image_size=self._image_size,
                         label=object_data['name'],
                         confidence=object_data['confidence'],

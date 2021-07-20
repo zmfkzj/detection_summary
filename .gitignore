@@ -1,0 +1,8 @@
+*.pyc
+*.csv
+*.xlsx
+*.txt
+*.json
+*__pycache__*
+.vscode
+*.egg-info
