@@ -15,7 +15,7 @@ class Evaluation:
     def __init__(self,dt_path, gt_path, type) -> None:
         assert type in ['bbox','segm'], '"type" argument must be one of "bbox" or "segm"'
         self.dataset = DetectDataset(dt_path=dt_path)
-        gt_path = Path('train.json')
+        gt_path = Path(gt_path)
         self.re_encoding(gt_path)
         gt_path = gt_path.parent/f'cp949_{gt_path.name}'
         self.dataset.to_coco_result(gt_path)
@@ -44,16 +44,16 @@ class Evaluation:
         _f1 = (2*precision*recall)/(precision+recall)
         return round(_f1,4) if not np.isnan(_f1) else 0
 
-    def eval(self):
+    def run_eval(self, conf_thresh):
         self._eval_images()
-        self._eval_classes()
+        self._eval_classes(conf_thresh)
 
     def _eval_classes(self, conf_thresh:float):
         evals_df = pd.DataFrame()
         param_catIds = { self.eval.cocoGt.loadCats(i)[0]['name']:[i] for i in self.catIds }
         param_catIds.update({'all_classes':self.catIds})
         for label_name,param_cat_id in param_catIds.items():
-            self.eval.params.imgIds = self.eval.cocoGt.getImgIds(catIds=param_cat_id)
+            self.eval.params.imgIds = self.eval.cocoGt.getImgIds(catIds=param_cat_id) if label_name!='all_classes' else self.imgIds
             self.eval.params.catIds = param_cat_id
             self.eval.evaluate()
             self.eval.accumulate()
@@ -82,8 +82,8 @@ class Evaluation:
         each_class = result_per_img.loc[result_per_img['class']!='all_classes']
         all_class = result_per_img.loc[result_per_img['class']=='all_classes']
         with pd.ExcelWriter('summary.xlsx',mode='a') as writer:
-            each_class.to_excel(writer,'perClass_each_Class',index=False)
-            all_class.to_excel(writer,'perClass_allClass',index=False)
+            each_class.to_excel(writer,'perClass_each_Class',index=False,float_format='%.4f')
+            all_class.to_excel(writer,'perClass_allClass',index=False,float_format='%.4f')
 
     def _eval_images(self):
         evals_df = pd.DataFrame()
@@ -119,9 +119,9 @@ class Evaluation:
         each_class = result_per_img.loc[result_per_img['class']!='all_classes']
         all_class = result_per_img.loc[result_per_img['class']=='all_classes']
         with pd.ExcelWriter('summary.xlsx') as writer:
-            each_class.to_excel(writer,'perImg_eachClass',index=False)
-            all_class.to_excel(writer,'perImg_allClass',index=False)
+            each_class.to_excel(writer,'perImg_eachClass',index=False,float_format='%.4f')
+            all_class.to_excel(writer,'perImg_allClass',index=False,float_format='%.4f')
 
 if __name__=='__main__':
-    asdf = Evaluation('add_train.json',1,'bbox')
-    asdf.eval()
+    asdf = Evaluation('add_train.json','train.json','bbox')
+    asdf.run_eval(0.25)

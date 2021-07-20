@@ -5,7 +5,8 @@ install_requires = \
         'pycocotools-windows',
         'chardet',
         'imantics',
-        'openpyxl'
+        'openpyxl',
+        'ddt @ git+https://github.com/zmfkzj/draw_detection',
     ]
 
 setuptools.setup(
