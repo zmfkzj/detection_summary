@@ -1,7 +1,11 @@
 setup.py
 dtsummary/__init__.py
+dtsummary/component.py
+dtsummary/cvtyolo2coco.py
 dtsummary/evalutation.py
 dtsummary/main.py
+dtsummary/summary_ui.py
+dtsummary/ui.py
 dtsummary.egg-info/PKG-INFO
 dtsummary.egg-info/SOURCES.txt
 dtsummary.egg-info/dependency_links.txt

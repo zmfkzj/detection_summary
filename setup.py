@@ -1,14 +1,18 @@
 import setuptools
+from subprocess import check_call
 
 install_requires = \
     [
-        'pycocotools-windows',
+        'pycocotools ;platform_system!="Windows"',
+        'pycocotools-windows ;platform_system=="Windows"',
         'chardet',
         'imantics',
         'openpyxl',
         'ddt @ git+https://github.com/zmfkzj/draw_detection',
+        'pyside6'
     ]
 
+check_call("conda install -y --file requirements.txt".split())
 setuptools.setup(
     name="dtsummary",
     version="0.0.1",
