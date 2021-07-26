@@ -35,7 +35,7 @@ class DetectDataset:
     def append(self, image_data:dict):
         filename = image_data['filename']
         objects_data = image_data['objects']
-        sizegetter = itemgetter('h_r','w_r')
+        sizegetter = itemgetter('height','width')
         image_size = sizegetter(image_data['image_size'])
         image = DetectImage(filename=filename,
                             image_size=image_size,
@@ -52,23 +52,31 @@ class DetectDataset:
         self.extend(images_data)
 
     def _load_detection_results(self, path):
-        with open(path,'r',encoding='utf-8') as f:
+        with open(path,'rb') as f:
+            rawdata = f.read()
+        encoding = chardet.detect(rawdata)
+
+        with open(path,'r', encoding=encoding) as f:
             images_data = json.load(f)
         self.set_item(images_data)
 
-    def _load_gt(self, path):
-        with open(path,'r',encoding='utf-8') as f:
-            images_data = json.load(f)
-        self.set_item(images_data)
+    # def _load_gt(self, path):
+    #     with open(path,'rb') as f:
+    #         rawdata = f.read()
+    #     encoding = chardet.detect(rawdata)
+
+    #     with open(path,'r', encoding=encoding) as f:
+    #         images_data = json.load(f)
+    #     self.set_item(images_data)
 
     def _get_categories_from_items(self):
         labels = [[box.label for box in image.dt] for image in self._items ]
         self._categories = list(set(reduce(lambda x,y: x+y,labels)))
 
     def to_coco_result(self, gt_path):
-        with open(gt_path, 'r') as f:
-            gt = f.readline()
-        encoding = chardet.detect(gt.encode())['encoding']
+        with open(gt_path, 'rb') as f:
+            gt = f.read()
+        encoding = chardet.detect(gt)['encoding']
 
         with open(gt_path, 'r',encoding=encoding) as f:
             gt = json.load(f)
@@ -109,12 +117,16 @@ class DetectDataset:
                 new_result_base['score'] = obj.confidence
                 dt_results.append(new_result_base)
         
-        with open('detection_result_COCOeval_cp949.json','w', encoding='cp949') as f:
+        with open('detection_result_COCOeval.json','w') as f:
             json.dump(dt_results,f,ensure_ascii=False,indent=4)
 
     def to_coco(self, gt_path):
         new_base = deepcopy(coco_base_format)
-        with open(gt_path, 'r',encoding='utf-8') as f:
+        with open(gt_path, 'r') as f:
+            gt = f.read()
+        encoding = chardet.detect(gt)
+
+        with open(gt_path, 'r',encoding=encoding) as f:
             gt = json.load(f)
 
         gt_labels:list = gt['categories']
@@ -174,9 +186,7 @@ class DetectDataset:
 
                 anno_id += 1
         
-        with open('detection_result_coco_format_utf-8.json','w', encoding='utf-8') as f:
-            json.dump(new_base,f,ensure_ascii=False,indent=4)
-        with open('detection_result_coco_format_cp949.json','w', encoding='cp949') as f:
+        with open('detection_result_coco_format.json','w',encoding='utf-8') as f:
             json.dump(new_base,f,ensure_ascii=False,indent=4)
 
 coco_base_format = \

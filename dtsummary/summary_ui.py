@@ -17,87 +17,14 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(356, 464)
+        MainWindow.resize(356, 531)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.formFrame = QFrame(self.centralwidget)
         self.formFrame.setObjectName(u"formFrame")
-        self.formFrame.setGeometry(QRect(-1, -1, 351, 421))
+        self.formFrame.setGeometry(QRect(-1, -1, 351, 481))
         self.formLayout = QFormLayout(self.formFrame)
         self.formLayout.setObjectName(u"formLayout")
-        self.gridGroupBox = QGroupBox(self.formFrame)
-        self.gridGroupBox.setObjectName(u"gridGroupBox")
-        self.gridLayout = QGridLayout(self.gridGroupBox)
-        self.gridLayout.setObjectName(u"gridLayout")
-        self.label_2 = QLabel(self.gridGroupBox)
-        self.label_2.setObjectName(u"label_2")
-
-        self.gridLayout.addWidget(self.label_2, 1, 0, 1, 1)
-
-        self.label = QLabel(self.gridGroupBox)
-        self.label.setObjectName(u"label")
-
-        self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
-
-        self.sel_gt = QPushButton(self.gridGroupBox)
-        self.sel_gt.setObjectName(u"sel_gt")
-
-        self.gridLayout.addWidget(self.sel_gt, 0, 2, 1, 1)
-
-        self.eval_btn = QPushButton(self.gridGroupBox)
-        self.eval_btn.setObjectName(u"eval_btn")
-
-        self.gridLayout.addWidget(self.eval_btn, 3, 2, 1, 1)
-
-        self.label_5 = QLabel(self.gridGroupBox)
-        self.label_5.setObjectName(u"label_5")
-
-        self.gridLayout.addWidget(self.label_5, 3, 0, 1, 1)
-
-        self.eval_gt_path = QLineEdit(self.gridGroupBox)
-        self.eval_gt_path.setObjectName(u"eval_gt_path")
-
-        self.gridLayout.addWidget(self.eval_gt_path, 0, 1, 1, 1)
-
-        self.conf_thresh = QSpinBox(self.gridGroupBox)
-        self.conf_thresh.setObjectName(u"conf_thresh")
-
-        self.gridLayout.addWidget(self.conf_thresh, 3, 1, 1, 1)
-
-        self.eval_dt_path = QLineEdit(self.gridGroupBox)
-        self.eval_dt_path.setObjectName(u"eval_dt_path")
-
-        self.gridLayout.addWidget(self.eval_dt_path, 1, 1, 1, 1)
-
-        self.sel_dt = QPushButton(self.gridGroupBox)
-        self.sel_dt.setObjectName(u"sel_dt")
-
-        self.gridLayout.addWidget(self.sel_dt, 1, 2, 1, 1)
-
-        self.gridLayout_8 = QGridLayout()
-        self.gridLayout_8.setObjectName(u"gridLayout_8")
-        self.bbox = QRadioButton(self.gridGroupBox)
-        self.bbox.setObjectName(u"bbox")
-        self.bbox.setChecked(True)
-
-        self.gridLayout_8.addWidget(self.bbox, 0, 0, 1, 1)
-
-        self.segm = QRadioButton(self.gridGroupBox)
-        self.segm.setObjectName(u"segm")
-
-        self.gridLayout_8.addWidget(self.segm, 0, 1, 1, 1)
-
-
-        self.gridLayout.addLayout(self.gridLayout_8, 2, 1, 1, 1)
-
-        self.label_6 = QLabel(self.gridGroupBox)
-        self.label_6.setObjectName(u"label_6")
-
-        self.gridLayout.addWidget(self.label_6, 2, 0, 1, 1)
-
-
-        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.gridGroupBox)
-
         self.gridGroupBox_3 = QGroupBox(self.formFrame)
         self.gridGroupBox_3.setObjectName(u"gridGroupBox_3")
         self.gridLayout_3 = QGridLayout(self.gridGroupBox_3)
@@ -172,7 +99,7 @@ class Ui_MainWindow(object):
         self.gridLayout_3.addWidget(self.draw_btn, 1, 2, 1, 1)
 
 
-        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.gridGroupBox_3)
+        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.gridGroupBox_3)
 
         self.gridGroupBox_2 = QGroupBox(self.formFrame)
         self.gridGroupBox_2.setObjectName(u"gridGroupBox_2")
@@ -214,7 +141,88 @@ class Ui_MainWindow(object):
         self.gridLayout_7.addWidget(self.cvt_btn, 2, 1, 1, 1)
 
 
-        self.formLayout.setWidget(3, QFormLayout.FieldRole, self.gridGroupBox_2)
+        self.formLayout.setWidget(4, QFormLayout.FieldRole, self.gridGroupBox_2)
+
+        self.gridLayout_9 = QGridLayout()
+        self.gridLayout_9.setObjectName(u"gridLayout_9")
+        self.label = QLabel(self.formFrame)
+        self.label.setObjectName(u"label")
+
+        self.gridLayout_9.addWidget(self.label, 0, 0, 1, 1)
+
+        self.sel_gt = QPushButton(self.formFrame)
+        self.sel_gt.setObjectName(u"sel_gt")
+
+        self.gridLayout_9.addWidget(self.sel_gt, 0, 2, 1, 1)
+
+        self.eval_gt_path = QLineEdit(self.formFrame)
+        self.eval_gt_path.setObjectName(u"eval_gt_path")
+
+        self.gridLayout_9.addWidget(self.eval_gt_path, 0, 1, 1, 1)
+
+        self.label_2 = QLabel(self.formFrame)
+        self.label_2.setObjectName(u"label_2")
+
+        self.gridLayout_9.addWidget(self.label_2, 1, 0, 1, 1)
+
+        self.eval_dt_path = QLineEdit(self.formFrame)
+        self.eval_dt_path.setObjectName(u"eval_dt_path")
+
+        self.gridLayout_9.addWidget(self.eval_dt_path, 1, 1, 1, 1)
+
+        self.sel_dt = QPushButton(self.formFrame)
+        self.sel_dt.setObjectName(u"sel_dt")
+
+        self.gridLayout_9.addWidget(self.sel_dt, 1, 2, 1, 1)
+
+
+        self.formLayout.setLayout(0, QFormLayout.FieldRole, self.gridLayout_9)
+
+        self.gridGroupBox = QGroupBox(self.formFrame)
+        self.gridGroupBox.setObjectName(u"gridGroupBox")
+        self.gridLayout = QGridLayout(self.gridGroupBox)
+        self.gridLayout.setObjectName(u"gridLayout")
+        self.eval_btn = QPushButton(self.gridGroupBox)
+        self.eval_btn.setObjectName(u"eval_btn")
+
+        self.gridLayout.addWidget(self.eval_btn, 4, 2, 1, 1)
+
+        self.label_5 = QLabel(self.gridGroupBox)
+        self.label_5.setObjectName(u"label_5")
+
+        self.gridLayout.addWidget(self.label_5, 4, 0, 1, 1)
+
+        self.label_6 = QLabel(self.gridGroupBox)
+        self.label_6.setObjectName(u"label_6")
+
+        self.gridLayout.addWidget(self.label_6, 3, 0, 1, 1)
+
+        self.gridLayout_8 = QGridLayout()
+        self.gridLayout_8.setObjectName(u"gridLayout_8")
+        self.bbox = QRadioButton(self.gridGroupBox)
+        self.bbox.setObjectName(u"bbox")
+        self.bbox.setChecked(True)
+
+        self.gridLayout_8.addWidget(self.bbox, 0, 0, 1, 1)
+
+        self.segm = QRadioButton(self.gridGroupBox)
+        self.segm.setObjectName(u"segm")
+
+        self.gridLayout_8.addWidget(self.segm, 0, 1, 1, 1)
+
+
+        self.gridLayout.addLayout(self.gridLayout_8, 3, 1, 1, 1)
+
+        self.conf_thresh = QDoubleSpinBox(self.gridGroupBox)
+        self.conf_thresh.setObjectName(u"conf_thresh")
+        self.conf_thresh.setMinimum(0.010000000000000)
+        self.conf_thresh.setSingleStep(0.010000000000000)
+        self.conf_thresh.setValue(0.250000000000000)
+
+        self.gridLayout.addWidget(self.conf_thresh, 4, 1, 1, 1)
+
+
+        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.gridGroupBox)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
@@ -232,16 +240,6 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.gridGroupBox.setTitle(QCoreApplication.translate("MainWindow", u"\ud3c9\uac00", None))
-        self.label_2.setText(QCoreApplication.translate("MainWindow", u"dt result", None))
-        self.label.setText(QCoreApplication.translate("MainWindow", u"coco GT", None))
-        self.sel_gt.setText(QCoreApplication.translate("MainWindow", u"\ud30c\uc77c\uc120\ud0dd", None))
-        self.eval_btn.setText(QCoreApplication.translate("MainWindow", u"\ud3c9\uac00 \ubc0f \uacb0\uacfc \uc800\uc7a5", None))
-        self.label_5.setText(QCoreApplication.translate("MainWindow", u"conf thresh", None))
-        self.sel_dt.setText(QCoreApplication.translate("MainWindow", u"\ud30c\uc77c\uc120\ud0dd", None))
-        self.bbox.setText(QCoreApplication.translate("MainWindow", u"Bbox", None))
-        self.segm.setText(QCoreApplication.translate("MainWindow", u"Seg", None))
-        self.label_6.setText(QCoreApplication.translate("MainWindow", u"\ud3c9\uac00\uc885\ub958", None))
         self.gridGroupBox_3.setTitle(QCoreApplication.translate("MainWindow", u"\uac1d\uccb4 \uadf8\ub9ac\uae30", None))
         self.gridGroupBox_42.setTitle(QCoreApplication.translate("MainWindow", u"\ucc44\uc6b0\uae30", None))
         self.fill_no.setText(QCoreApplication.translate("MainWindow", u"No", None))
@@ -260,5 +258,15 @@ class Ui_MainWindow(object):
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"coco GT", None))
         self.sel_yolo_json.setText(QCoreApplication.translate("MainWindow", u"\ud30c\uc77c\uc120\ud0dd", None))
         self.cvt_btn.setText(QCoreApplication.translate("MainWindow", u"\ubc14\uafb8\uae30", None))
+        self.label.setText(QCoreApplication.translate("MainWindow", u"coco GT", None))
+        self.sel_gt.setText(QCoreApplication.translate("MainWindow", u"\ud30c\uc77c\uc120\ud0dd", None))
+        self.label_2.setText(QCoreApplication.translate("MainWindow", u"dt result", None))
+        self.sel_dt.setText(QCoreApplication.translate("MainWindow", u"\ud30c\uc77c\uc120\ud0dd", None))
+        self.gridGroupBox.setTitle(QCoreApplication.translate("MainWindow", u"\ud3c9\uac00", None))
+        self.eval_btn.setText(QCoreApplication.translate("MainWindow", u"\ud3c9\uac00 \ubc0f \uacb0\uacfc \uc800\uc7a5", None))
+        self.label_5.setText(QCoreApplication.translate("MainWindow", u"conf thresh", None))
+        self.label_6.setText(QCoreApplication.translate("MainWindow", u"\ud3c9\uac00\uc885\ub958", None))
+        self.bbox.setText(QCoreApplication.translate("MainWindow", u"Bbox", None))
+        self.segm.setText(QCoreApplication.translate("MainWindow", u"Seg", None))
     # retranslateUi
 

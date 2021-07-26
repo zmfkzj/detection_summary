@@ -17,9 +17,9 @@ class Evaluation:
         self.dataset = DetectDataset(dt_path=dt_path)
         gt_path = Path(gt_path)
         self.re_encoding(gt_path)
-        gt_path = gt_path.parent/f'cp949_{gt_path.name}'
+        gt_path = gt_path.parent/f'{gt_path.name}'
         self.dataset.to_coco_result(gt_path)
-        dt_result_path = Path('detection_result_COCOeval_cp949.json')
+        dt_result_path = Path('detection_result_COCOeval.json')
 
         coco = COCO(str(gt_path))
         dt = coco.loadRes(str(dt_result_path))
@@ -29,14 +29,14 @@ class Evaluation:
 
     @staticmethod
     def re_encoding(json_file:Path):
-        with open(json_file, 'r') as f:
-            result = f.readline()
-        encoding = chardet.detect(result.encode())['encoding']
+        with open(json_file, 'rb') as f:
+            result = f.read()
+        encoding = chardet.detect(result)['encoding']
 
         with open(json_file, 'r',encoding=encoding) as f:
             result = json.load(f)
 
-        with open(json_file.parent/f'cp949_{json_file.name}', 'w',encoding='cp949') as f:
+        with open(json_file.parent/f'{json_file.name}', 'w') as f:
             json.dump(result,f)
     
     @staticmethod
@@ -45,7 +45,7 @@ class Evaluation:
         return round(_f1,4) if not np.isnan(_f1) else 0
 
     def run_eval(self, conf_thresh):
-        self._eval_images()
+        self._eval_images(conf_thresh)
         self._eval_classes(conf_thresh)
 
     def _eval_classes(self, conf_thresh:float):
@@ -85,7 +85,7 @@ class Evaluation:
             each_class.to_excel(writer,'perClass_each_Class',index=False,float_format='%.4f')
             all_class.to_excel(writer,'perClass_allClass',index=False,float_format='%.4f')
 
-    def _eval_images(self):
+    def _eval_images(self,conf_thresh):
         evals_df = pd.DataFrame()
         param_catIds = { self.eval.cocoGt.loadCats(i)[0]['name']:[i] for i in self.catIds }
         param_catIds.update({'all_classes':self.catIds})
@@ -99,7 +99,7 @@ class Evaluation:
                 self.eval.summarize()
                 evals = {
                     'id':img_id,
-                    'precision': np.round(np.mean([p for p in self.eval.eval['precision'][0,25,:,0,2] if p != -1]),4),
+                    'precision': np.round(np.mean([p for p in self.eval.eval['precision'][0,int(conf_thresh*100),:,0,2] if p != -1]),4),
                     'recall': np.round(np.mean([r for r in self.eval.eval['recall'][0,:,0,2] if r!=-1]),4),
                     'class': label_name
                     }

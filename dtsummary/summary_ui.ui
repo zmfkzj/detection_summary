@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>356</width>
-    <height>464</height>
+    <height>531</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,99 +20,11 @@
       <x>-1</x>
       <y>-1</y>
       <width>351</width>
-      <height>421</height>
+      <height>481</height>
      </rect>
     </property>
     <layout class="QFormLayout" name="formLayout">
-     <item row="0" column="1">
-      <widget class="QGroupBox" name="gridGroupBox">
-       <property name="title">
-        <string>평가</string>
-       </property>
-       <layout class="QGridLayout" name="gridLayout">
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>dt result</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>coco GT</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="QPushButton" name="sel_gt">
-          <property name="text">
-           <string>파일선택</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="2">
-         <widget class="QPushButton" name="eval_btn">
-          <property name="text">
-           <string>평가 및 결과 저장</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="label_5">
-          <property name="text">
-           <string>conf thresh</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLineEdit" name="eval_gt_path"/>
-        </item>
-        <item row="3" column="1">
-         <widget class="QSpinBox" name="conf_thresh"/>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="eval_dt_path"/>
-        </item>
-        <item row="1" column="2">
-         <widget class="QPushButton" name="sel_dt">
-          <property name="text">
-           <string>파일선택</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <layout class="QGridLayout" name="gridLayout_8">
-          <item row="0" column="0">
-           <widget class="QRadioButton" name="bbox">
-            <property name="text">
-             <string>Bbox</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QRadioButton" name="segm">
-            <property name="text">
-             <string>Seg</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_6">
-          <property name="text">
-           <string>평가종류</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item row="1" column="1">
+     <item row="2" column="1">
       <widget class="QGroupBox" name="gridGroupBox_3">
        <property name="title">
         <string>객체 그리기</string>
@@ -217,7 +129,7 @@
        </layout>
       </widget>
      </item>
-     <item row="3" column="1">
+     <item row="4" column="1">
       <widget class="QGroupBox" name="gridGroupBox_2">
        <property name="title">
         <string>yolo detection json → coco result json</string>
@@ -261,6 +173,108 @@
          <widget class="QPushButton" name="cvt_btn">
           <property name="text">
            <string>바꾸기</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <layout class="QGridLayout" name="gridLayout_9">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>coco GT</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QPushButton" name="sel_gt">
+         <property name="text">
+          <string>파일선택</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="eval_gt_path"/>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>dt result</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="eval_dt_path"/>
+       </item>
+       <item row="1" column="2">
+        <widget class="QPushButton" name="sel_dt">
+         <property name="text">
+          <string>파일선택</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="1" column="1">
+      <widget class="QGroupBox" name="gridGroupBox">
+       <property name="title">
+        <string>평가</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="4" column="2">
+         <widget class="QPushButton" name="eval_btn">
+          <property name="text">
+           <string>평가 및 결과 저장</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>conf thresh</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_6">
+          <property name="text">
+           <string>평가종류</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <layout class="QGridLayout" name="gridLayout_8">
+          <item row="0" column="0">
+           <widget class="QRadioButton" name="bbox">
+            <property name="text">
+             <string>Bbox</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QRadioButton" name="segm">
+            <property name="text">
+             <string>Seg</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="4" column="1">
+         <widget class="QDoubleSpinBox" name="conf_thresh">
+          <property name="minimum">
+           <double>0.010000000000000</double>
+          </property>
+          <property name="singleStep">
+           <double>0.010000000000000</double>
+          </property>
+          <property name="value">
+           <double>0.250000000000000</double>
           </property>
          </widget>
         </item>

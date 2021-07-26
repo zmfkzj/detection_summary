@@ -10,6 +10,13 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal"
+        },
+        {
+            "name": "run",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/dtsummary/main.py",
+            "console": "integratedTerminal"
         }
     ]
 }
