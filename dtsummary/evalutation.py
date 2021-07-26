@@ -2,43 +2,27 @@ from pycocotools.coco import COCO
 from pycocotools.cocoeval import COCOeval
 from pathlib import Path
 from dtsummary.object import DetectDataset
-from collections import defaultdict
+from dtsummary.util import json_to_cp949
 
-import chardet
-import json
 import numpy as np
 import pandas as pd
-import os.path as osp
+
 
 
 class Evaluation:
     def __init__(self,dt_path, gt_path, type) -> None:
         assert type in ['bbox','segm'], '"type" argument must be one of "bbox" or "segm"'
         self.dataset = DetectDataset(dt_path=dt_path)
-        gt_path = Path(gt_path)
-        self.re_encoding(gt_path)
-        gt_path = gt_path.parent/f'{gt_path.name}'
-        self.dataset.to_coco_result(gt_path)
+        self.dataset.to_coco_result(Path(gt_path))
         dt_result_path = Path('detection_result_COCOeval.json')
 
+        json_to_cp949(gt_path)
         coco = COCO(str(gt_path))
         dt = coco.loadRes(str(dt_result_path))
         self.eval = COCOeval(coco,dt,type)
         self.imgIds = self.eval.params.imgIds
         self.catIds = self.eval.params.catIds
 
-    @staticmethod
-    def re_encoding(json_file:Path):
-        with open(json_file, 'rb') as f:
-            result = f.read()
-        encoding = chardet.detect(result)['encoding']
-
-        with open(json_file, 'r',encoding=encoding) as f:
-            result = json.load(f)
-
-        with open(json_file.parent/f'{json_file.name}', 'w') as f:
-            json.dump(result,f)
-    
     @staticmethod
     def cal_F1(precision,recall):
         _f1 = (2*precision*recall)/(precision+recall)

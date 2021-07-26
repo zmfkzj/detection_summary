@@ -7,6 +7,7 @@ from .mask import Mask
 from typing import List
 from copy import deepcopy
 from functools import reduce
+from dtsummary.util import read_json
 
 import chardet
 import json
@@ -52,34 +53,15 @@ class DetectDataset:
         self.extend(images_data)
 
     def _load_detection_results(self, path):
-        with open(path,'rb') as f:
-            rawdata = f.read()
-        encoding = chardet.detect(rawdata)
-
-        with open(path,'r', encoding=encoding) as f:
-            images_data = json.load(f)
+        images_data = read_json(path)
         self.set_item(images_data)
-
-    # def _load_gt(self, path):
-    #     with open(path,'rb') as f:
-    #         rawdata = f.read()
-    #     encoding = chardet.detect(rawdata)
-
-    #     with open(path,'r', encoding=encoding) as f:
-    #         images_data = json.load(f)
-    #     self.set_item(images_data)
 
     def _get_categories_from_items(self):
         labels = [[box.label for box in image.dt] for image in self._items ]
         self._categories = list(set(reduce(lambda x,y: x+y,labels)))
 
     def to_coco_result(self, gt_path):
-        with open(gt_path, 'rb') as f:
-            gt = f.read()
-        encoding = chardet.detect(gt)['encoding']
-
-        with open(gt_path, 'r',encoding=encoding) as f:
-            gt = json.load(f)
+        gt = read_json(gt_path)
 
         gt_labels:list = gt['categories']
         gt_labels_name_id_dict = {}
@@ -117,17 +99,12 @@ class DetectDataset:
                 new_result_base['score'] = obj.confidence
                 dt_results.append(new_result_base)
         
-        with open('detection_result_COCOeval.json','w') as f:
+        with open('detection_result_COCOeval.json','w',encoding='cp949') as f:
             json.dump(dt_results,f,ensure_ascii=False,indent=4)
 
-    def to_coco(self, gt_path):
+    def to_coco_dataset(self, gt_path):
         new_base = deepcopy(coco_base_format)
-        with open(gt_path, 'r') as f:
-            gt = f.read()
-        encoding = chardet.detect(gt)
-
-        with open(gt_path, 'r',encoding=encoding) as f:
-            gt = json.load(f)
+        gt = read_json(gt_path)
 
         gt_labels:list = gt['categories']
         gt_labels_name_id_dict = {}
@@ -236,10 +213,10 @@ coco_result_bbox_base = \
         "image_id": 42,
         "category_id": 18,
         "bbox": [
-            258.15,
-            41.29,
-            348.26,
-            243.78
+            258.15, #x1
+            41.29, #y1
+            348.26, #w
+            243.78 #h
         ],
         "score": 0.236
     }
@@ -249,10 +226,10 @@ coco_result_seg_base = \
         "category_id": 56,
         "segmentation": {
             "size": [
-                480,
-                640
+                480, #height
+                640 #width
             ],
-            "counts": ""
+            "counts": "VQi31m>0O2N100O100O2N.........."
         },
         "score": 0.892
     }
