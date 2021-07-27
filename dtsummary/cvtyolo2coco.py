@@ -7,6 +7,7 @@ from dtsummary.util import read_json
 
 def cvtyolo2coco(yolo_result_path, gt_path):
 
+    root = Path(gt_path).parent
     yolo_result = read_json(yolo_result_path)
     gt_result = read_json(gt_path)
 
@@ -34,5 +35,5 @@ def cvtyolo2coco(yolo_result_path, gt_path):
     
     savepath = Path(gt_path).parent
     yolo_dt_save_path = osp.join(savepath,'custom_dt_result.json')
-    with open(yolo_dt_save_path,'w') as f:
+    with open(root/yolo_dt_save_path,'w') as f:
         json.dump(yolo_result,f)

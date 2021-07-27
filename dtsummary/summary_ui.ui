@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>356</width>
-    <height>531</height>
+    <height>592</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
       <x>-1</x>
       <y>-1</y>
       <width>351</width>
-      <height>481</height>
+      <height>561</height>
      </rect>
     </property>
     <layout class="QFormLayout" name="formLayout">
@@ -30,23 +30,89 @@
         <string>객체 그리기</string>
        </property>
        <layout class="QGridLayout" name="gridLayout_3">
+        <item row="5" column="2">
+         <widget class="QPushButton" name="draw_btn">
+          <property name="text">
+           <string>그리기 시작</string>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="2">
          <layout class="QGridLayout" name="gridLayout_2">
-          <item row="0" column="1">
-           <widget class="QGroupBox" name="gridGroupBox_42">
+          <item row="1" column="0">
+           <widget class="QGroupBox" name="gridGroupBox_5">
             <property name="title">
-             <string>채우기</string>
+             <string>DT선모양</string>
             </property>
-            <layout class="QGridLayout" name="gridLayout_4">
+            <layout class="QGridLayout" name="gridLayout_10">
+             <item row="3" column="0">
+              <widget class="QRadioButton" name="dtline_no">
+               <property name="text">
+                <string>없음</string>
+               </property>
+              </widget>
+             </item>
              <item row="1" column="0">
-              <widget class="QRadioButton" name="fill_no">
+              <widget class="QRadioButton" name="dtline_solid">
+               <property name="text">
+                <string>실선</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QRadioButton" name="dtline_dot">
+               <property name="text">
+                <string>점선</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QGroupBox" name="gridGroupBox_43">
+            <property name="title">
+             <string>DT채우기</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_11">
+             <item row="1" column="0">
+              <widget class="QRadioButton" name="dtfill_no">
                <property name="text">
                 <string>No</string>
                </property>
               </widget>
              </item>
              <item row="0" column="0">
-              <widget class="QRadioButton" name="fill_yes">
+              <widget class="QRadioButton" name="dtfill_yes">
+               <property name="text">
+                <string>Yes</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QGroupBox" name="gridGroupBox_42">
+            <property name="title">
+             <string>GT채우기</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_4">
+             <item row="1" column="0">
+              <widget class="QRadioButton" name="gtfill_no">
+               <property name="text">
+                <string>No</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QRadioButton" name="gtfill_yes">
                <property name="text">
                 <string>Yes</string>
                </property>
@@ -61,27 +127,56 @@
           <item row="0" column="0">
            <widget class="QGroupBox" name="gridGroupBox_4">
             <property name="title">
-             <string>선모양</string>
+             <string>GT선모양</string>
             </property>
             <layout class="QGridLayout" name="gridLayout_5">
-             <item row="2" column="0">
-              <widget class="QRadioButton" name="line_dot">
-               <property name="text">
-                <string>점선</string>
-               </property>
-              </widget>
-             </item>
              <item row="3" column="0">
-              <widget class="QRadioButton" name="line_no">
+              <widget class="QRadioButton" name="gtline_no">
                <property name="text">
                 <string>없음</string>
                </property>
               </widget>
              </item>
              <item row="1" column="0">
-              <widget class="QRadioButton" name="line_solid">
+              <widget class="QRadioButton" name="gtline_solid">
                <property name="text">
                 <string>실선</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QRadioButton" name="gtline_dot">
+               <property name="text">
+                <string>점선</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QGroupBox" name="gridGroupBox1">
+            <property name="title">
+             <string>GT,DT sign</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_12">
+             <item row="0" column="0">
+              <widget class="QCheckBox" name="gt_sign">
+               <property name="text">
+                <string>GT</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QCheckBox" name="dt_sign">
+               <property name="text">
+                <string>DT</string>
                </property>
                <property name="checked">
                 <bool>true</bool>
@@ -119,12 +214,26 @@
           </item>
          </layout>
         </item>
-        <item row="1" column="2">
-         <widget class="QPushButton" name="draw_btn">
-          <property name="text">
-           <string>그리기 시작</string>
-          </property>
-         </widget>
+        <item row="3" column="2">
+         <layout class="QGridLayout" name="gridLayout_13">
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="labelmap_path"/>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_7">
+            <property name="text">
+             <string>LabelMap</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QPushButton" name="sel_labelmap">
+            <property name="text">
+             <string>파일선택</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>
@@ -201,12 +310,9 @@
        <item row="1" column="0">
         <widget class="QLabel" name="label_2">
          <property name="text">
-          <string>cumtom Dt</string>
+          <string>cumtom DT</string>
          </property>
         </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLineEdit" name="eval_dt_path"/>
        </item>
        <item row="1" column="2">
         <widget class="QPushButton" name="sel_dt">
@@ -214,6 +320,9 @@
           <string>파일선택</string>
          </property>
         </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="eval_dt_path"/>
        </item>
       </layout>
      </item>

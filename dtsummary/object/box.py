@@ -34,9 +34,9 @@ class Bbox:
         self._x1_r = np.maximum(xc_r-w_r/2,0)
         self._x2_r = np.minimum(xc_r+w_r/2,1)
         self._y1_r = np.maximum(yc_r-h_r/2,0)
-        self._y2_r = np.maximum(yc_r+h_r/2,1)
-        self._w_r = self.x2_r-self._x1_r
-        self._h_r = self.y2_r-self._y1_r
+        self._y2_r = np.minimum(yc_r+h_r/2,1)
+        self._w_r = self._x2_r-self._x1_r
+        self._h_r = self._y2_r-self._y1_r
         self._xc_r = self._x1_r+self._w_r/2
         self._yc_r = self._y1_r+self._h_r/2
         self._area_r = self._w_r*self._h_r
@@ -156,7 +156,7 @@ class Bbox:
     def area_r(self): return self._area_r
 
     @property
-    def yolo(self): return self.x1_r, self.x2_r, self.w_r, self.h_r
+    def yolo(self): return self.xc_r, self.yc_r, self.w_r, self.h_r
 
     @property
     def voc(self): return self.x1_a, self.y1_a, self.x2_a, self.y2_a

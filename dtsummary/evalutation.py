@@ -12,9 +12,10 @@ import pandas as pd
 class Evaluation:
     def __init__(self,dt_path, gt_path, type) -> None:
         assert type in ['bbox','segm'], '"type" argument must be one of "bbox" or "segm"'
+        self.root = Path(gt_path).parent
         self.dataset = DetectDataset(dt_path=dt_path)
         self.dataset.to_coco_result(Path(gt_path))
-        dt_result_path = Path('detection_result_COCOeval.json')
+        dt_result_path = self.root/'detection_result_COCOeval.json'
 
         json_to_cp949(gt_path)
         coco = COCO(str(gt_path))
@@ -65,7 +66,7 @@ class Evaluation:
         result_per_img = evals_df.reindex(columns=['precision','recall','f1','mAP50:95','mAP50','mAP75','mAR100','width','height','gt_img_count','class','gt_obj_count','area_mean','area_min','area_max'])
         each_class = result_per_img.loc[result_per_img['class']!='all_classes']
         all_class = result_per_img.loc[result_per_img['class']=='all_classes']
-        with pd.ExcelWriter('summary.xlsx',mode='a') as writer:
+        with pd.ExcelWriter(str(self.root/'summary.xlsx'),mode='a') as writer:
             each_class.to_excel(writer,'perClass_each_Class',index=False,float_format='%.4f')
             all_class.to_excel(writer,'perClass_allClass',index=False,float_format='%.4f')
 
@@ -102,7 +103,7 @@ class Evaluation:
         result_per_img = result_per_img.reindex(columns=['id','precision','recall','f1','mAP50:95','mAP50','mAP75','mAR100','width','height','file_name','class'])
         each_class = result_per_img.loc[result_per_img['class']!='all_classes']
         all_class = result_per_img.loc[result_per_img['class']=='all_classes']
-        with pd.ExcelWriter('summary.xlsx') as writer:
+        with pd.ExcelWriter(str(self.root/'summary.xlsx')) as writer:
             each_class.to_excel(writer,'perImg_eachClass',index=False,float_format='%.4f')
             all_class.to_excel(writer,'perImg_allClass',index=False,float_format='%.4f')
 

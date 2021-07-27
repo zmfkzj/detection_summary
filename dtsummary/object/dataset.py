@@ -1,4 +1,5 @@
 from operator import itemgetter
+from pathlib import Path
 
 from .image import DetectImage
 from .box import Bbox
@@ -61,6 +62,7 @@ class DetectDataset:
         self._categories = list(set(reduce(lambda x,y: x+y,labels)))
 
     def to_coco_result(self, gt_path):
+        root = Path(gt_path).parent
         gt = read_json(gt_path)
 
         gt_labels:list = gt['categories']
@@ -99,12 +101,13 @@ class DetectDataset:
                 new_result_base['score'] = obj.confidence
                 dt_results.append(new_result_base)
         
-        with open('detection_result_COCOeval.json','w',encoding='cp949') as f:
+        with open(root/'detection_result_COCOeval.json','w',encoding='cp949') as f:
             json.dump(dt_results,f,ensure_ascii=False,indent=4)
 
     def to_coco_dataset(self, gt_path):
         new_base = deepcopy(coco_base_format)
         gt = read_json(gt_path)
+        root = Path(gt_path).parent
 
         gt_labels:list = gt['categories']
         gt_labels_name_id_dict = {}
@@ -163,7 +166,7 @@ class DetectDataset:
 
                 anno_id += 1
         
-        with open('detection_result_coco_format.json','w',encoding='utf-8') as f:
+        with open(root/'detection_result_coco_format.json','w',encoding='utf-8') as f:
             json.dump(new_base,f,ensure_ascii=False,indent=4)
 
 coco_base_format = \
