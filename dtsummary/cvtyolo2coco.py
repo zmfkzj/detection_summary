@@ -26,10 +26,7 @@ def cvtyolo2coco(yolo_result_path, gt_path):
         r['image_size'] = {'height':coco_image['height'],'width':coco_image['width']}
         for o in r['objects']:
             coord = o['relative_coordinates']
-            new_coord = {'xc_r':coord['center_x'],
-                        'yc_r': coord['center_y'],
-                        'w_r': coord['width'],
-                        'h_r': coord['height']}
+            new_coord = [ coord['center_x'],coord['center_y'],coord['width'],coord['height'] ]
             o['yolo_bbox'] = new_coord
             del  o['relative_coordinates']
     

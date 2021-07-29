@@ -55,7 +55,7 @@ class Evaluation:
                 }
             evals.update(area_describ_dict)
             evals.update({
-                'f1': self.cal_F1(evals['precision'],evals['recall']),
+                'f1_25': self.cal_F1(evals['precision'],evals['recall']),
                 'mAP50:95':self.eval.stats[0],
                 'mAP50': self.eval.stats[1],
                 'mAP75': self.eval.stats[2],

@@ -49,16 +49,13 @@ class _DetectImage:
         assert set(['yolo_bbox', 'voc_bbox','coco_bbox']) & set(object_data), 'type argument is one of "[yolo voc coco]_bbox" or "mask"'
         for key in object_data:
             if key=='yolo_bbox':
-                boxgetter = itemgetter('xc_r','yc_r','w_r','h_r')
-                kwdarg = {'yolo_box':boxgetter(object_data['yolo_bbox'])}
+                kwdarg = {'yolo_box':object_data['yolo_bbox']}
                 obj_cls = Bbox
             elif key=='voc_bbox':
-                boxgetter = itemgetter('x1_a','y1_a','x2_a','y2_a')
-                kwdarg = {'voc_box':boxgetter(object_data['voc_bbox'])}
+                kwdarg = {'voc_box':object_data['voc_bbox']}
                 obj_cls = Bbox
             elif key=='coco_bbox':
-                boxgetter = itemgetter('x1_a','y1_a','w_a','h_a')
-                kwdarg = {'coco_box':boxgetter(object_data['coco_bbox'])}
+                kwdarg = {'coco_box':object_data['coco_bbox']}
                 obj_cls = Bbox
             elif key=='mask':
                 obj_cls = Mask

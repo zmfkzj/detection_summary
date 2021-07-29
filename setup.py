@@ -16,7 +16,7 @@ install_requires = \
 check_call("conda install -y --file requirements.txt".split())
 setuptools.setup(
     name="dtsummary",
-    version="0.0.2",
+    version="1.0.0",
     author="zmfkzj",
     author_email="qlwlal@naver.com",
     description="디텍션 결과를 정리하기 위한 모듈",
