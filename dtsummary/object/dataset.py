@@ -9,6 +9,7 @@ from typing import List
 from copy import deepcopy
 from functools import reduce
 from dtsummary.util import read_json
+from collections import defaultdict
 
 import chardet
 import json
@@ -17,11 +18,11 @@ class DetectDataset:
     '''
     collection of DetectImage
     '''
-    def __init__(self, images_data:List[dict]=None, dt_path:str=None) -> None:
+    def __init__(self, images_data:List[dict]=None, custom_dt_path:str=None) -> None:
         if images_data:
             self.set_item(images_data)
-        elif dt_path:
-            self._load_detection_results(dt_path)
+        elif custom_dt_path:
+            self._load_detection_results(custom_dt_path)
         else:
             self._items:List[DetectImage] = []
 
@@ -104,7 +105,53 @@ class DetectDataset:
         with open(root/'detection_result_COCOeval.json','w',encoding='cp949') as f:
             json.dump(dt_results,f,ensure_ascii=False,indent=4)
 
-    def to_coco_dataset(self, gt_path):
+    def to_coco_dataset(self, gt_path='', save_path=''):
+        if gt_path:
+            self._to_coco_dataset_with_gt(gt_path=gt_path)
+        elif save_path:
+            self._to_coco_dataset_without_gt(save_path=save_path)
+        else:
+            self._to_coco_dataset_without_gt(save_path='')
+
+    def _to_coco_dataset_without_gt(self, save_path):
+        new_base = deepcopy(coco_base_format)
+        root = Path(save_path).parent
+
+        labels_name_id_dict = defaultdict(lambda: len(labels_name_id_dict)+1)
+        for label in self._categories:
+
+            new_categories = deepcopy(coco_categories_base)
+            new_categories["name"] = label
+            new_categories["id"] = labels_name_id_dict[label]
+
+            new_base['categories'].append(new_categories)
+
+        images_name_id_dict = defaultdict(lambda: len(images_name_id_dict)+1)
+        for image in self._items:
+
+            new_image = deepcopy(coco_images_base)
+            new_image['id'] = images_name_id_dict[image.filename]
+
+            new_image['height'], new_image['width'] = image.size
+            new_image['file_name'] = image.filename
+            new_base['images'].append(new_image)
+
+            for anno in image.dt:
+                new_annotations = deepcopy(coco_annotations_base)
+                new_annotations['id'] = len(new_base['annotations'])+1
+                new_annotations['image_id'] =images_name_id_dict[image.filename]
+                new_annotations['category_id'] = labels_name_id_dict[anno.label]
+                if isinstance(anno,Mask):
+                    new_annotations['segmentation'] = [anno.polygons]
+                elif isinstance(anno, Bbox):
+                    new_annotations['bbox'] = anno.coco
+                new_annotations['area'] = anno.area_a
+                new_base['annotations'].append(new_annotations)
+        
+        with open(root/'detection_result_coco_format.json','w') as f:
+            json.dump(new_base,f,ensure_ascii=False,indent=4)
+
+    def _to_coco_dataset_with_gt(self, gt_path):
         new_base = deepcopy(coco_base_format)
         gt = read_json(gt_path)
         root = Path(gt_path).parent

@@ -106,7 +106,7 @@ class WindowClass(QMainWindow, Ui_MainWindow):
             if tag==False:
                 ddt_img.drawLegend()
 
-            ddt_img.save(Path(self.eval_gt_path.text())/f'../result_images/{filename}')
+            ddt_img.save(Path(self.eval_gt_path.text()).parent/f'../result_images/{filename}')
 
     def __getattr__(self,name):
         if name=='eval':

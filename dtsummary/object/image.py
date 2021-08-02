@@ -1,4 +1,3 @@
-from operator import itemgetter
 from .box import Bbox
 from .mask import Mask
 from typing import List, Union

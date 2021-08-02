@@ -86,7 +86,7 @@ class Bbox:
         self._x2_a = np.minimum(width,x1_a+w_a)
         self._y2_a = np.minimum(height,y1_a+h_a)
         self._w_a = self._x2_a-self._x1_a
-        self._h_a = self._y2_a-self._y2_a
+        self._h_a = self._y2_a-self._y1_a
         self._xc_a = self._x1_a+self._w_a/2
         self._yc_a = self._y1_a+self._h_a/2
         self._area_a = self._w_a*self._h_a

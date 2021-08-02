@@ -13,7 +13,7 @@ class Evaluation:
     def __init__(self,dt_path, gt_path, type) -> None:
         assert type in ['bbox','segm'], '"type" argument must be one of "bbox" or "segm"'
         self.root = Path(gt_path).parent
-        self.dataset = DetectDataset(dt_path=dt_path)
+        self.dataset = DetectDataset(custom_dt_path=dt_path)
         self.dataset.to_coco_result(Path(gt_path))
         dt_result_path = self.root/'detection_result_COCOeval.json'
 
