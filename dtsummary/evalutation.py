@@ -6,7 +6,7 @@ from dtsummary.util import json_to_cp949
 
 import numpy as np
 import pandas as pd
-
+import tensorflow as tf
 
 
 class Evaluation:
@@ -28,6 +28,9 @@ class Evaluation:
     def cal_F1(precision,recall):
         _f1 = (2*precision*recall)/(precision+recall)
         return round(_f1,4) if not np.isnan(_f1) else 0
+    
+    def cal_recall(self, conf_thresh):
+        tf.metric
 
     def run_eval(self, conf_thresh):
         self._eval_images(conf_thresh)
@@ -37,6 +40,7 @@ class Evaluation:
         evals_df = pd.DataFrame()
         param_catIds = { self.eval.cocoGt.loadCats(i)[0]['name']:[i] for i in self.catIds }
         param_catIds.update({'all_classes':self.catIds})
+        conf_id = int(conf_thresh*100)
         for label_name,param_cat_id in param_catIds.items():
             self.eval.params.imgIds = self.eval.cocoGt.getImgIds(catIds=param_cat_id) if label_name!='all_classes' else self.imgIds
             self.eval.params.catIds = param_cat_id
@@ -49,13 +53,16 @@ class Evaluation:
             area_describ_dict = pd.Series(areas).describe().reindex(['count','mean','min','max']).rename({'count':'gt_obj_count', 'mean':'area_mean','min':'area_min','max':'area_max'}).to_dict()
             evals = {
                 'class': label_name,
-                'gt_img_count': len(self.eval.params.imgIds),
-                'precision': np.round(np.mean([p for p in self.eval.eval['precision'][0,int(conf_thresh*100),:,0,2] if p != -1]),4),
-                'recall': np.round(np.mean([r for r in self.eval.eval['recall'][0,:,0,2] if r!=-1]),4),
+                'gt_img_count': len(self.eval.cocoGt.getImgIds(catIds=param_cat_id)),
+                'dt_img_count': len(self.eval.cocoDt.getImgIds(catIds=param_cat_id)),
+                'gt_obj_count': len(self.eval.cocoGt.loadAnns(self.eval.cocoGt.getAnnIds(imgIds=self.eval.params.imgIds,catIds=param_cat_id))),
+                'dt_obj_count': len([ann for ann in self.eval.cocoDt.loadAnns(self.eval.cocoDt.getAnnIds(imgIds=self.eval.params.imgIds,catIds=param_cat_id)) if ann['score']>=conf_thresh]),
+                'precision': np.round(np.mean([p for p in self.eval.eval['precision'][0,conf_id,:,0,2] if p != -1]),4),
+                'recall': self.cal_recall(),
                 }
             evals.update(area_describ_dict)
             evals.update({
-                'f1_25': self.cal_F1(evals['precision'],evals['recall']),
+                f'f1_{conf_id}': self.cal_F1(evals['precision'],evals['recall']),
                 'mAP50:95':self.eval.stats[0],
                 'mAP50': self.eval.stats[1],
                 'mAP75': self.eval.stats[2],
@@ -63,7 +70,7 @@ class Evaluation:
                 })
             evals_df = evals_df.append(evals,ignore_index=True)
 
-        result_per_img = evals_df.reindex(columns=['precision','recall','f1','mAP50:95','mAP50','mAP75','mAR100','width','height','gt_img_count','class','gt_obj_count','area_mean','area_min','area_max'])
+        result_per_img = evals_df.reindex(columns=list(evals.keys()))
         each_class = result_per_img.loc[result_per_img['class']!='all_classes']
         all_class = result_per_img.loc[result_per_img['class']=='all_classes']
         with pd.ExcelWriter(str(self.root/'summary.xlsx'),mode='a') as writer:
@@ -74,6 +81,7 @@ class Evaluation:
         evals_df = pd.DataFrame()
         param_catIds = { self.eval.cocoGt.loadCats(i)[0]['name']:[i] for i in self.catIds }
         param_catIds.update({'all_classes':self.catIds})
+        conf_id = int(conf_thresh*100)
         for label_name,param_cat_id in param_catIds.items():
             cat_img_Ids = self.eval.cocoGt.getImgIds(catIds=param_cat_id) if label_name!='all_classes' else self.imgIds
             for img_id in cat_img_Ids:
@@ -83,14 +91,16 @@ class Evaluation:
                 self.eval.accumulate()
                 self.eval.summarize()
                 evals = {
-                    'id':img_id,
+                    'id':self.eval.cocoGt.loadImgs(img_id)[0]['file_name'],
                     'precision': np.round(np.mean([p for p in self.eval.eval['precision'][0,int(conf_thresh*100),:,0,2] if p != -1]),4),
-                    'recall': np.round(np.mean([r for r in self.eval.eval['recall'][0,:,0,2] if r!=-1]),4),
-                    'class': label_name
+                    'recall': self.cal_recall(),
+                    'class': label_name,
+                    'gt_obj_count': len(self.eval.cocoGt.loadAnns(self.eval.cocoGt.getAnnIds(imgIds=self.eval.params.imgIds,catIds=param_cat_id))),
+                    'dt_obj_count': len([ann for ann in self.eval.cocoDt.loadAnns(self.eval.cocoDt.getAnnIds(imgIds=self.eval.params.imgIds,catIds=param_cat_id)) if ann['score']>=conf_thresh]),
                     }
 
                 evals.update({
-                    'f1': self.cal_F1(evals['precision'],evals['recall']),
+                    f'f1_{conf_id}': self.cal_F1(evals['precision'],evals['recall']),
                     'mAP50:95':self.eval.stats[0],
                     'mAP50': self.eval.stats[1],
                     'mAP75': self.eval.stats[2],
@@ -100,7 +110,7 @@ class Evaluation:
             
         images = pd.DataFrame(self.eval.cocoGt.loadImgs(self.imgIds))
         result_per_img = pd.merge(evals_df,images,how='outer')
-        result_per_img = result_per_img.reindex(columns=['id','precision','recall','f1','mAP50:95','mAP50','mAP75','mAR100','width','height','file_name','class'])
+        result_per_img = result_per_img.reindex(columns=list(evals.keys()))
         each_class = result_per_img.loc[result_per_img['class']!='all_classes']
         all_class = result_per_img.loc[result_per_img['class']=='all_classes']
         with pd.ExcelWriter(str(self.root/'summary.xlsx')) as writer:

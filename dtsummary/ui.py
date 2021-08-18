@@ -1,5 +1,4 @@
 import numpy as np
-import cv2
 
 from PySide6.QtWidgets import *
 from PySide6.QtCore import Qt
