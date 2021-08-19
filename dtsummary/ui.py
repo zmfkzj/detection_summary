@@ -9,7 +9,7 @@ from ddt import DdtImage
 from dtsummary.summary_ui import Ui_MainWindow
 from dtsummary.cvtyolo2coco import cvtyolo2coco
 from dtsummary.evalutation import Evaluation
-from dtsummary.object import Bbox
+from dtsummary.object import Bbox,Mask
 
 #화면을 띄우는데 사용되는 Class 선언
 class WindowClass(QMainWindow, Ui_MainWindow):
@@ -63,7 +63,8 @@ class WindowClass(QMainWindow, Ui_MainWindow):
     def draw(self):
         gt = self.eval.eval.cocoGt
         dt = self.eval.eval.cocoDt
-        for image_id, gt_annos in gt.imgToAnns.items():
+        for image_id in gt.getImgIds():
+            gt_annos = gt.loadAnns(ids=gt.getAnnIds(imgIds=image_id))
             dt_annos = dt.imgToAnns[image_id]
             filename = gt.loadImgs(ids=image_id)[0]['file_name']
             image_path = Path(self.eval_gt_path.text()).parent/f'../images/{filename}'
@@ -82,7 +83,8 @@ class WindowClass(QMainWindow, Ui_MainWindow):
                 cat = gt.loadCats(ids=anno['category_id'])[0]['name']
                 if self.eval_type=='segm':
                     for seg in anno['segmentation']:
-                        ddt_img.drawSeg(cat,seg,self.gtline_style,self.gtfill)
+                        mask = Mask(image_size,rle=seg)
+                        ddt_img.drawSeg(cat,mask.polygons,self.gtline_style,self.gtfill,mask=mask.mask)
                 elif self.eval_type=='bbox':
                     ddt_img.drawBbox(cat,Bbox(image_size,coco_box=anno['bbox']).voc,self.gtline_style,self.gtfill, tag=tag)
             #draw dt
@@ -92,7 +94,8 @@ class WindowClass(QMainWindow, Ui_MainWindow):
                 cat = dt.loadCats(ids=anno['category_id'])[0]['name']
                 if self.eval_type=='segm':
                     for seg in anno['segmentation']:
-                        ddt_img.drawSeg(cat,seg,self.dtline_style,self.dtfill)
+                        mask = Mask(image_size,rle=seg)
+                        ddt_img.drawSeg(cat,mask.polygons,self.dtline_style,self.dtfill,mask=mask.mask)
                 elif self.eval_type=='bbox':
                     ddt_img.drawBbox(cat,Bbox(image_size,coco_box=anno['bbox']).voc,self.dtline_style,self.dtfill, tag=tag)
 

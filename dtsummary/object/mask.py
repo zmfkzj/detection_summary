@@ -31,6 +31,9 @@ class Mask:
                         coco_box=coco_bbox
                         )
 
+    def get_mask(self):
+        return coco_mask.decode(self.rle)
+
     @property
     def area(self): return self._area
 
@@ -48,3 +51,6 @@ class Mask:
 
     @property
     def bbox(self): return self._bbox
+
+    @property
+    def mask(self): return self.get_mask()

@@ -10,13 +10,14 @@ install_requires = \
         'pandas',
         'openpyxl',
         'ddt @ git+https://github.com/zmfkzj/draw_detection',
-        'pyside6 ;platform_system!="darwin"'
+        'pyside6 ;platform_system!="darwin"',
+        'tensorflow>=2.5.0 ;platform_system!="darwin"'
     ]
 
 check_call("conda install -y --file requirements.txt".split())
 setuptools.setup(
     name="dtsummary",
-    version="1.0.1",
+    version="1.0.2",
     author="zmfkzj",
     author_email="qlwlal@naver.com",
     description="디텍션 결과를 정리하기 위한 모듈",
