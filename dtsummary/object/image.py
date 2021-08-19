@@ -56,9 +56,12 @@ class _DetectImage:
             elif key=='coco_bbox':
                 kwdarg = {'coco_box':object_data['coco_bbox']}
                 obj_cls = Bbox
-            elif key=='mask':
+            elif key=='rle':
                 obj_cls = Mask
-                kwdarg = {'mask':object_data['mask']}
+                kwdarg = {'rle':object_data['rle']}
+            elif key=='polygons':
+                obj_cls = Mask
+                kwdarg = {'polygons':object_data['polygons']}
             else:
                 pass
         object = obj_cls(image_size=self._image_size,
