@@ -19,7 +19,9 @@ class Mask:
             self._polygons = iMask(binary_mask).polygons
         elif polygons:
             self._polygons = polygons
-            self._rle = coco_mask.frPyObjects(polygons,*image_size)
+            rles = coco_mask.frPyObjects(polygons,*image_size)
+            self._rle = coco_mask.merge(rles)
+
         else:
             raise Exception('please input one of "rle" or "polygons"')
         self._area = coco_mask.area(self._rle)

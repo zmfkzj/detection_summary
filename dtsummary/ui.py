@@ -82,9 +82,9 @@ class WindowClass(QMainWindow, Ui_MainWindow):
             for anno in gt_annos:
                 cat = gt.loadCats(ids=anno['category_id'])[0]['name']
                 if self.eval_type=='segm':
-                    for seg in anno['segmentation']:
-                        mask = Mask(image_size,rle=seg)
-                        ddt_img.drawSeg(cat,mask.polygons,self.gtline_style,self.gtfill,mask=mask.mask)
+                    mask = Mask(image_size,polygons=anno['segmentation'])
+                    for polygon in mask.polygons:
+                        ddt_img.drawSeg(cat,polygon,self.gtline_style,self.gtfill,mask=mask.mask)
                 elif self.eval_type=='bbox':
                     ddt_img.drawBbox(cat,Bbox(image_size,coco_box=anno['bbox']).voc,self.gtline_style,self.gtfill, tag=tag)
             #draw dt
@@ -93,9 +93,9 @@ class WindowClass(QMainWindow, Ui_MainWindow):
                     continue
                 cat = dt.loadCats(ids=anno['category_id'])[0]['name']
                 if self.eval_type=='segm':
-                    for seg in anno['segmentation']:
-                        mask = Mask(image_size,rle=seg)
-                        ddt_img.drawSeg(cat,mask.polygons,self.dtline_style,self.dtfill,mask=mask.mask)
+                    mask = Mask(image_size,polygons=anno['segmentation'])
+                    for polygon in mask.polygons:
+                        ddt_img.drawSeg(cat,polygon,self.dtline_style,self.dtfill,mask=mask.mask)
                 elif self.eval_type=='bbox':
                     ddt_img.drawBbox(cat,Bbox(image_size,coco_box=anno['bbox']).voc,self.dtline_style,self.dtfill, tag=tag)
 

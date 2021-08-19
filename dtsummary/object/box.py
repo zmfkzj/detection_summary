@@ -11,14 +11,11 @@ class Bbox:
         self._label = label
         self._confidence = confidence
 
-        if yolo_box:
-            self._yolo_box = yolo_box
+        if yolo_box is not None:
             self._cal_yolo_box(yolo_box,image_size)
-        elif voc_box:
-            self._voc_box = voc_box
+        elif voc_box is not None:
             self._cal_voc_box(voc_box, image_size)
-        elif coco_box:
-            self._coco_box = coco_box
+        elif coco_box is not None:
             self._cal_coco_box(coco_box,image_size)
         else:
             raise Exception('please enter at least one bbox argument')
