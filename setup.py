@@ -1,5 +1,7 @@
 import setuptools
 from subprocess import check_call
+import os.path as osp
+from pathlib import Path
 
 install_requires = \
     [
@@ -14,7 +16,8 @@ install_requires = \
         'tensorflow>=2.5.0 ;platform_system!="darwin"'
     ]
 
-check_call("conda install -y --file requirements.txt".split())
+root = Path(__file__).parent
+check_call("conda install -y --file".split()+[str(root/"requirements.txt")])
 setuptools.setup(
     name="dtsummary",
     version="1.0.2",
