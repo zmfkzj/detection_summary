@@ -61,6 +61,7 @@ class WindowClass(QMainWindow, Ui_MainWindow):
         self.draw_btn.clicked.connect(self.draw)
 
     def draw(self):
+        self.eval = Evaluation(self.eval_dt_path.text(),self.eval_gt_path.text(),self.eval_type)
         gt = self.eval.eval.cocoGt
         dt = self.eval.eval.cocoDt
         for image_id in gt.getImgIds():
@@ -109,11 +110,6 @@ class WindowClass(QMainWindow, Ui_MainWindow):
                 ddt_img.drawLegend()
 
             ddt_img.save(Path(self.eval_gt_path.text()).parent/f'../result_images/{filename}')
-
-    def __getattr__(self,name):
-        if name=='eval':
-            self.eval = Evaluation(self.eval_dt_path.text(),self.eval_gt_path.text(),self.eval_type)
-        return getattr(self,name)
 
     def single_file_select(self, lineEdit, *a):
         filename = QFileDialog.getOpenFileName(self, 'Open File', '')
