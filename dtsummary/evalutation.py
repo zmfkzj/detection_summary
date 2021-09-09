@@ -52,8 +52,33 @@ class Evaluation:
                 recalls[cat_id-1] = r.result().numpy()
                 r.reset_state()
         recall = np.mean([r for r in recalls if r!= -1])
-        print(recall)
+        print(f'{recall=}')
         return recall
+
+    def cal_precision(self, conf_thresh):
+        p = tf.metrics.Precision(thresholds=conf_thresh)
+        cats = self.eval.cocoGt.cats
+        precisions = -np.ones(len(cats))
+        for cat_id in self.eval.params.catIds:
+            y_pred = []
+            y_true = []
+            for img in self.eval.evalImgs:
+                if img is None:
+                    continue
+                if cat_id!=img['category_id']:
+                    continue
+                if img['aRng']!=[0, 10000000000.0]:
+                    continue
+                y_pred.extend(img['dtScores'])
+                _y_true = [1 if match_id!=0 else 0 for match_id in img['dtMatches'][0,:]]
+                y_true.extend(_y_true)
+            if y_pred:
+                p.update_state(y_true,y_pred)
+                precisions[cat_id-1] = p.result().numpy()
+                p.reset_state()
+        precision = np.mean([r for r in precisions if r!= -1])
+        print(f'{precision=}')
+        return precision
 
     def run_eval(self, conf_thresh):
         self._eval_images(conf_thresh)
@@ -80,7 +105,7 @@ class Evaluation:
                 'dt_img_count': len({ ann['image_id'] for ann in self.eval.cocoDt.loadAnns(self.eval.cocoDt.getAnnIds(imgIds=self.eval.params.imgIds,catIds=param_cat_id)) if ann['score']>=conf_thresh}),
                 'gt_obj_count': len(self.eval.cocoGt.loadAnns(self.eval.cocoGt.getAnnIds(imgIds=self.eval.params.imgIds,catIds=param_cat_id))),
                 'dt_obj_count': len([ann for ann in self.eval.cocoDt.loadAnns(self.eval.cocoDt.getAnnIds(imgIds=self.eval.params.imgIds,catIds=param_cat_id)) if ann['score']>=conf_thresh]),
-                'precision': np.round(np.mean([p for p in self.eval.eval['precision'][0,conf_id,:,0,2] if p != -1]),4),
+                'precision': self.cal_recall(conf_thresh),
                 'recall': self.cal_recall(conf_thresh),
                 }
             evals.update(area_describ_dict)
@@ -116,7 +141,7 @@ class Evaluation:
                 self.eval.summarize()
                 evals = {
                     'id':int(img_id),
-                    'precision': np.round(np.mean([p for p in self.eval.eval['precision'][0,conf_id,:,0,2] if p != -1]),4),
+                    'precision': self.cal_precision(conf_thresh),
                     'recall': self.cal_recall(conf_thresh),
                     'class': label_name,
                     'gt_obj_count': len(self.eval.cocoGt.loadAnns(self.eval.cocoGt.getAnnIds(imgIds=self.eval.params.imgIds,catIds=param_cat_id))),
