@@ -8,14 +8,17 @@ class DetectImage:
     def __init__(self, filename:str, 
                     image_size:Union[np.ndarray,list,tuple],
                     dt_objects_data:List[dict]=None,
-                    gt_objects_data:List[dict]=None) -> None:
+                    gt_objects_data:List[dict]=None,
+                    conf_thresh = 0) -> None:
         self._filename = filename
         self._image_size = image_size
 
         self._dt = _DetectImage(image_size=image_size,
-                                objects_data=dt_objects_data)
+                                objects_data=dt_objects_data, 
+                                conf_thresh = conf_thresh)
         self._gt = _DetectImage(image_size=image_size,
-                                objects_data=gt_objects_data)
+                                objects_data=gt_objects_data,
+                                conf_thresh = conf_thresh)
 
     def __len__(self): return (len(self._dt), len(self._gt))
     def __repr__(self): return (repr(self._dt), repr(self._gt))
@@ -35,8 +38,10 @@ class DetectImage:
 
 class _DetectImage:
     def __init__(self, image_size:Union[np.ndarray,list,tuple],
-                    objects_data:List[dict]=None) -> None:
+                    objects_data:List[dict]=None,
+                    conf_thresh=0) -> None:
         self._image_size = image_size
+        self.conf_thresh = conf_thresh
 
         self.set_item(objects_data)
 
@@ -72,6 +77,8 @@ class _DetectImage:
     
     def extend(self, objects_data:List[dict]):
         for object_data in objects_data:
+            if object_data['confidence']<self.conf_thresh:
+                continue
             self.append(object_data)
 
     def set_item(self, objects_data:List[dict]):

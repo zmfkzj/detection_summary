@@ -5,7 +5,7 @@ from pathlib import Path
 from dtsummary.util import read_json
 
 
-def cvtyolo2coco(yolo_result_path, gt_path):
+def cvtyolo2custom(yolo_result_path, gt_path):
 
     root = Path(gt_path).parent
     yolo_result = read_json(yolo_result_path)

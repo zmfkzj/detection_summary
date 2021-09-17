@@ -7,9 +7,9 @@ from PIL import Image
 from ddt import DdtImage
 
 from dtsummary.summary_ui import Ui_MainWindow
-from dtsummary.cvtyolo2coco import cvtyolo2coco
+from dtsummary.cvtyolo2custom import cvtyolo2custom
 from dtsummary.evalutation import Evaluation
-from dtsummary.object import Bbox,Mask
+from dtsummary.object import Bbox,Mask,DetectDataset
 
 #화면을 띄우는데 사용되는 Class 선언
 class WindowClass(QMainWindow, Ui_MainWindow):
@@ -49,7 +49,7 @@ class WindowClass(QMainWindow, Ui_MainWindow):
         # yolo result → coco result
         self.sel_cvt_gt_path.clicked.connect(lambda: self.single_file_select(self.cvt_gt_path))
         self.sel_yolo_json.clicked.connect(lambda: self.single_file_select(self.yolo_json_path))
-        self.cvt_btn.clicked.connect(lambda: cvtyolo2coco(self.yolo_json_path.text(),self.cvt_gt_path.text()))
+        self.cvt_btn.clicked.connect(lambda: cvtyolo2custom(self.yolo_json_path.text(),self.cvt_gt_path.text()))
 
         # evaluation
         self.sel_gt.clicked.connect(lambda: self.single_file_select(self.eval_gt_path))
@@ -61,6 +61,8 @@ class WindowClass(QMainWindow, Ui_MainWindow):
         self.draw_btn.clicked.connect(self.draw)
 
     def draw(self):
+        gt = DetectDataset(custom_dt_path=self.eval_gt_path.text(),)
+        dt = DetectDataset(custom_dt_path=self.eval_dt_path.text())
         self.eval = Evaluation(self.eval_dt_path.text(),self.eval_gt_path.text(),self.eval_type)
         gt = self.eval.eval.cocoGt
         dt = self.eval.eval.cocoDt

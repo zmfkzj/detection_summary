@@ -18,7 +18,8 @@ class DetectDataset:
     '''
     collection of DetectImage
     '''
-    def __init__(self, images_data:List[dict]=None, custom_dt_path:str=None) -> None:
+    def __init__(self, images_data:List[dict]=None, custom_dt_path:str=None, conf_thresh=0) -> None:
+        self.conf_thresh = conf_thresh
         if images_data:
             self.set_item(images_data)
         elif custom_dt_path:
@@ -43,6 +44,7 @@ class DetectDataset:
         image = DetectImage(filename=filename,
                             image_size=image_size,
                             dt_objects_data=objects_data,
+                            conf_thresh = self.conf_thresh
                             )
         self._items.append(image)
     
