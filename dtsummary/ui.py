@@ -61,8 +61,6 @@ class WindowClass(QMainWindow, Ui_MainWindow):
         self.draw_btn.clicked.connect(self.draw)
 
     def draw(self):
-        gt = DetectDataset(custom_dt_path=self.eval_gt_path.text(),)
-        dt = DetectDataset(custom_dt_path=self.eval_dt_path.text())
         self.eval = Evaluation(self.eval_dt_path.text(),self.eval_gt_path.text(),self.eval_type)
         gt = self.eval.eval.cocoGt
         dt = self.eval.eval.cocoDt
