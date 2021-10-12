@@ -3,20 +3,22 @@ from typing import Tuple, List, Union
 import numpy as np
 
 class Bbox:
-    def __init__(self,image_size,label:str = None, confidence:float=1,
-                    yolo_box:Union[np.ndarray, List, Tuple]=None,
-                    voc_box:Union[np.ndarray, List, Tuple]=None,
-                    coco_box:Union[np.ndarray, List, Tuple]=None,
+    def __init__(self,image_size,
+                    label:str = None, 
+                    confidence:float=1,
+                    yolo_bbox:Union[np.ndarray, List, Tuple]=None,
+                    voc_bbox:Union[np.ndarray, List, Tuple]=None,
+                    coco_bbox:Union[np.ndarray, List, Tuple]=None,
                     ) -> None:
         self._label = label
         self._confidence = confidence
 
-        if yolo_box is not None:
-            self._cal_yolo_box(yolo_box,image_size)
-        elif voc_box is not None:
-            self._cal_voc_box(voc_box, image_size)
-        elif coco_box is not None:
-            self._cal_coco_box(coco_box,image_size)
+        if yolo_bbox is not None:
+            self._cal_yolo_box(yolo_bbox,image_size)
+        elif voc_bbox is not None:
+            self._cal_voc_box(voc_bbox, image_size)
+        elif coco_bbox is not None:
+            self._cal_coco_box(coco_bbox,image_size)
         else:
             raise Exception('please enter at least one bbox argument')
 

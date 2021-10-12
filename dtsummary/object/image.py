@@ -53,13 +53,13 @@ class _DetectImage:
         assert set(['yolo_bbox', 'voc_bbox','coco_bbox']) & set(object_data), 'type argument is one of "[yolo voc coco]_bbox" or "mask"'
         for key in object_data:
             if key=='yolo_bbox':
-                kwdarg = {'yolo_box':object_data['yolo_bbox']}
+                kwdarg = {'yolo_bbox':object_data['yolo_bbox']}
                 obj_cls = Bbox
             elif key=='voc_bbox':
-                kwdarg = {'voc_box':object_data['voc_bbox']}
+                kwdarg = {'voc_bbox':object_data['voc_bbox']}
                 obj_cls = Bbox
             elif key=='coco_bbox':
-                kwdarg = {'coco_box':object_data['coco_bbox']}
+                kwdarg = {'coco_bbox':object_data['coco_bbox']}
                 obj_cls = Bbox
             elif key=='rle':
                 obj_cls = Mask
@@ -70,7 +70,7 @@ class _DetectImage:
             else:
                 pass
         object = obj_cls(image_size=self._image_size,
-                        label=object_data['name'],
+                        label=object_data['label'],
                         confidence=object_data['confidence'],
                         **kwdarg)
         self._items.append(object)
