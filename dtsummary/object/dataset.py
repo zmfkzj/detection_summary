@@ -1,6 +1,8 @@
 from operator import itemgetter
 from pathlib import Path
 
+from numpy.core.fromnumeric import argmin
+
 from .image import DetectImage
 from .box import Bbox
 from .mask import Mask
@@ -81,13 +83,17 @@ class DetectDataset:
 
         dt_results = []
         for image in self._items:
-            gt_image_name = [gt_image for gt_image in gt_images_name_id_dict if (gt_image.rfind(image.filename)!=-1) | (image.filename.rfind(gt_image) != -1)]
-            if len(gt_image_name)==1:
-                gt_image_name = gt_image_name[0]
+            gt_matching_image_names = [gt_image_name for gt_image_name in gt_images_name_id_dict if (gt_image_name.rfind(image.filename)!=-1) | (image.filename.rfind(gt_image_name) != -1)]
+            if len(gt_matching_image_names)==1:
+                gt_matching_image_names = gt_matching_image_names[0]
+            elif len(gt_matching_image_names)>1:
+                matching_index = argmin([gt_image_name.rfind(image.filename) for gt_image_name in gt_matching_image_names])
+                gt_matching_image_names = gt_matching_image_names[matching_index]
             else:
+                print(gt_matching_image_names)
                 raise Exception('gt와 dt의 이미지 파일명을 매칭하지 못했습니다.')
 
-            image_id = gt_images_name_id_dict[gt_image_name]
+            image_id = gt_images_name_id_dict[gt_matching_image_names]
             for obj in image.dt:
                 category_id = gt_labels_name_id_dict[obj.label]
                 if isinstance(obj,Bbox):
