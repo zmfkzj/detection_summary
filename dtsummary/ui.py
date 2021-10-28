@@ -86,8 +86,8 @@ class WindowClass(QMainWindow, Ui_MainWindow):
                     mask = Mask(image_size,polygons=anno['segmentation'])
                     for polygon in mask.polygons:
                         ddt_img.drawSeg(cat,polygon,self.gtline_style,self.gtfill,mask=mask.mask)
-                elif (self.eval_type=='bbox') & (self.gtline_style!='no') & self.gtfill:
-                    ddt_img.drawBbox(cat,Bbox(image_size,coco_box=anno['bbox']).voc,self.gtline_style,self.gtfill, tag=tag, preffix=str(anno['id']))
+                elif (self.eval_type=='bbox') & ((self.gtline_style!='no') | self.gtfill):
+                    ddt_img.drawBbox(cat,Bbox(image_size,coco_bbox=anno['bbox']).voc,self.gtline_style,self.gtfill, tag=tag, preffix=str(anno['id']))
             #draw dt
             for anno in dt_annos:
                 if anno['score']<float(self.conf_thresh.text()):
@@ -97,8 +97,8 @@ class WindowClass(QMainWindow, Ui_MainWindow):
                     mask = Mask(image_size,polygons=anno['segmentation'])
                     for polygon in mask.polygons:
                         ddt_img.drawSeg(cat,polygon,self.dtline_style,self.dtfill,mask=mask.mask)
-                elif (self.eval_type=='bbox') & (self.dtline_style!='no') & self.dtfill:
-                    ddt_img.drawBbox(cat,Bbox(image_size,coco_box=anno['bbox']).voc,self.dtline_style,self.dtfill, tag=tag, preffix=str(anno['id']))
+                elif (self.eval_type=='bbox') & ((self.dtline_style!='no') | self.dtfill):
+                    ddt_img.drawBbox(cat,Bbox(image_size,coco_bbox=anno['bbox']).voc,self.dtline_style,self.dtfill, tag=tag, preffix=str(anno['id']))
 
             #draw sign
             if self.gt_sign.isChecked():

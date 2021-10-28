@@ -30,7 +30,7 @@ class Mask:
         self._bbox = Bbox(image_size=image_size,
                         label=label,
                         confidence=confidence,
-                        coco_box=coco_bbox
+                        coco_bbox=coco_bbox
                         )
 
     def get_mask(self):

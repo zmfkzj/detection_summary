@@ -65,12 +65,21 @@ class Evaluation:
             for img in self.eval.evalImgs:
                 if img is None:
                     continue
+                if img['image_id'] == 2:
+                    print()
                 if cat_id!=img['category_id']:
                     continue
                 if img['aRng']!=[0, 10000000000.0]:
                     continue
-                y_pred.extend(img['dtScores'])
-                _y_true = [1 if match_id!=0 else 0 for match_id in img['dtMatches'][0,:]]
+                score_match = [(score,match) for score,match in zip(img['dtScores'],img['dtMatches'][0,:]) if score>conf_thresh]
+                if score_match:
+                    score, match = zip(*score_match)
+                else:
+                    score = []
+                    match = []
+
+                y_pred.extend(score)
+                _y_true = [1 if match_id!=0 else 0 for match_id in match]
                 y_true.extend(_y_true)
             if y_pred:
                 p.update_state(y_true,y_pred)
