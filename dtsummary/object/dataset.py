@@ -224,6 +224,22 @@ class DetectDataset:
         with open(root/'detection_result_coco_format.json','w',encoding='utf-8') as f:
             json.dump(new_base,f,ensure_ascii=False,indent=4)
 
+    def to_custom_json(self):
+        custom_results = []
+        for img in self._items:
+            objects = [{'label':obj.label, 
+                        'confidence':obj.confidence, 
+                        'voc_bbox':obj.voc}
+                        for obj in img.dt._items]
+            custom_result = {'filename':str(Path(img.filename).as_posix()),
+                            'image_size': {'height':img.size[0],
+                                            'width': img.size[1]},
+                            'objects':objects }
+            custom_results.append(custom_result)
+        with open('costum_results.json','w') as f:
+            json.dump(custom_results,f)
+
+
 coco_base_format = \
     {"licenses": [
         {"name": "",
