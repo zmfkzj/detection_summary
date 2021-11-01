@@ -3,6 +3,7 @@ from .mask import Mask
 from typing import List, Union
 
 import numpy as np
+from pathlib import Path
 
 class DetectImage:
     def __init__(self, filename:str, 
@@ -35,7 +36,17 @@ class DetectImage:
     @property
     def gt(self): return self._gt
 
-
+    @property
+    def data(self):
+        dt_objects = [item.data for item in self.dt]
+        gt_objects = [item.data for item in self.gt]
+        objects = []
+        objects.extend(dt_objects)
+        objects.extend(gt_objects)
+        return {'filename':str(Path(self.filename).as_posix()),
+                'image_size': {'height':self.size[0],
+                                'width': self.size[1]},
+                'objects': objects}
 class _DetectImage:
     def __init__(self, image_size:Union[np.ndarray,list,tuple],
                     objects_data:List[dict]=None,
@@ -44,6 +55,7 @@ class _DetectImage:
         self.conf_thresh = conf_thresh
 
         self.set_item(objects_data)
+        
 
     def __iter__(self): return iter(self._items)
     def __len__(self): return len(self._items)
@@ -85,3 +97,7 @@ class _DetectImage:
         self._items:List[Union[Bbox,Mask]] = []
         if objects_data:
             self.extend(objects_data)
+
+    @property
+    def data(self):
+        return [item.data for item in self._items]
