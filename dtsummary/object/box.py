@@ -22,6 +22,10 @@ class Bbox:
         else:
             raise Exception('please enter at least one bbox argument')
 
+        self._data = {'label':self.label, 
+                    'confidence':self.confidence, 
+                    'voc_bbox':self.voc}
+
     def _cal_yolo_box(self,yolo_box,image_size):
         '''
         yolo_box = (x_center_relative, y_center_relative,width_relative,height_relative)
@@ -162,3 +166,6 @@ class Bbox:
 
     @property
     def coco(self): return self.x1_a, self.y1_a, self.w_a, self.h_a
+
+    @property
+    def data(self): return self._data

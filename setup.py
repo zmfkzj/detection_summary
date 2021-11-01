@@ -20,13 +20,12 @@ root = Path(__file__).parent
 check_call("conda install -y --file".split()+[str(root/"requirements.txt")])
 setuptools.setup(
     name="dtsummary",
-    version="1.1.0",
+    version="1.1.1",
     author="zmfkzj",
     author_email="qlwlal@naver.com",
     description="디텍션 결과를 정리하기 위한 모듈",
     packages=setuptools.find_packages(),
     install_requires=install_requires,
-    python_requires=">=3.8",
     entry_points={
         'console_scripts': [
             'dts=dtsummary.main:main'
