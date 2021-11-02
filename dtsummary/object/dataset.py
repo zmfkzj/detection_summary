@@ -236,7 +236,7 @@ class DetectDataset:
                                             'width': img.size[1]},
                             'objects':objects }
             custom_results.append(custom_result)
-        with open('costum_results.json','w') as f:
+        with open('custom_results.json','w') as f:
             json.dump(custom_results,f)
 
 
