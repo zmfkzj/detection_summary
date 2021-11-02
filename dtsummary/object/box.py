@@ -34,10 +34,10 @@ class Bbox:
         xc_r,yc_r,w_r,h_r = yolo_box
         height, width = image_size
 
-        self._x1_r = np.maximum(xc_r-w_r/2,0)
-        self._x2_r = np.minimum(xc_r+w_r/2,1)
-        self._y1_r = np.maximum(yc_r-h_r/2,0)
-        self._y2_r = np.minimum(yc_r+h_r/2,1)
+        self._x1_r = float(np.maximum(xc_r-w_r/2,0))
+        self._x2_r = float(np.minimum(xc_r+w_r/2,1))
+        self._y1_r = float(np.maximum(yc_r-h_r/2,0))
+        self._y2_r = float(np.minimum(yc_r+h_r/2,1))
         self._w_r = self._x2_r-self._x1_r
         self._h_r = self._y2_r-self._y1_r
         self._xc_r = self._x1_r+self._w_r/2
@@ -62,10 +62,10 @@ class Bbox:
         x1_a, y1_a, x2_a, y2_a = voc_box
         height, width = image_size
 
-        self._x1_a = np.maximum(0,x1_a)
-        self._y1_a = np.maximum(0,y1_a)
-        self._x2_a = np.minimum(width,x2_a)
-        self._y2_a = np.minimum(height,y2_a)
+        self._x1_a = float(np.maximum(0,x1_a))
+        self._y1_a = float(np.maximum(0,y1_a))
+        self._x2_a = float(np.minimum(width,x2_a))
+        self._y2_a = float(np.minimum(height,y2_a))
         self._w_a = self._x2_a-self._x1_a
         self._h_a = self._y2_a-self._y1_a
         self._xc_a = self._x1_a+self._w_a/2
@@ -84,10 +84,10 @@ class Bbox:
         x1_a,y1_a,w_a,h_a = coco_box
         height, width = image_size
 
-        self._x1_a = np.maximum(0,x1_a)
-        self._y1_a = np.maximum(0,y1_a)
-        self._x2_a = np.minimum(width,x1_a+w_a)
-        self._y2_a = np.minimum(height,y1_a+h_a)
+        self._x1_a = float(np.maximum(0,x1_a))
+        self._y1_a = float(np.maximum(0,y1_a))
+        self._x2_a = float(np.minimum(width,x1_a+w_a))
+        self._y2_a = float(np.minimum(height,y1_a+h_a))
         self._w_a = self._x2_a-self._x1_a
         self._h_a = self._y2_a-self._y1_a
         self._xc_a = self._x1_a+self._w_a/2
