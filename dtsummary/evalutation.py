@@ -30,7 +30,10 @@ class Evaluation:
         _f1 = (2*precision*recall)/(precision+recall)
         return round(_f1,4) if not np.isnan(_f1) else 0
     
-    def cal_recall(self, conf_thresh):
+    def cal_recall(self, conf_thresh, iou_thresh=0.5):
+        assert iou_thresh in np.arange(0.5,1,0.05), "iou_thresh must be in [0.5:0.95:0.05]"
+        iou_thresh_dict = {val:idx for idx,val in enumerate(np.arange(0.5,1,0.05))}
+
         r = tf.metrics.Recall(thresholds=conf_thresh)
         cats = self.eval.cocoGt.cats
         recalls = -np.ones(len(cats))
@@ -44,7 +47,7 @@ class Evaluation:
                     continue
                 if img['aRng']!=[0, 10000000000.0]:
                     continue
-                y_true.extend([1 for _ in img['gtMatches'][0,:]])
+                y_true.extend([1 for _ in img['gtMatches'][iou_thresh_dict[iou_thresh],:]])
                 _y_pred = [img['dtScores'][img['dtIds'].index(match_id)] if match_id!=0 else 0 for match_id in img['gtMatches'][0,:]]
                 y_pred.extend(_y_pred)
             if y_true:
@@ -55,7 +58,10 @@ class Evaluation:
         print(f'{recall=}')
         return recall
 
-    def cal_precision(self, conf_thresh):
+    def cal_precision(self, conf_thresh, iou_thresh=0.5):
+        assert iou_thresh in np.arange(0.5,1,0.05), "iou_thresh must be in [0.5:0.95:0.05]"
+        iou_thresh_dict = {val:idx for idx,val in enumerate(np.arange(0.5,1,0.05))}
+
         p = tf.metrics.Precision(thresholds=conf_thresh)
         cats = self.eval.cocoGt.cats
         precisions = -np.ones(len(cats))
@@ -71,7 +77,7 @@ class Evaluation:
                     continue
                 if img['aRng']!=[0, 10000000000.0]:
                     continue
-                score_match = [(score,match) for score,match in zip(img['dtScores'],img['dtMatches'][0,:]) if score>conf_thresh]
+                score_match = [(score,match) for score,match in zip(img['dtScores'],img['dtMatches'][iou_thresh_dict[iou_thresh],:]) if score>conf_thresh]
                 if score_match:
                     score, match = zip(*score_match)
                 else:

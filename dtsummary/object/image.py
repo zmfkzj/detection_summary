@@ -62,7 +62,7 @@ class _DetectImage:
     def __repr__(self): return repr(self._items)
 
     def append(self, object_data:dict):
-        assert set(['yolo_bbox', 'voc_bbox','coco_bbox']) & set(object_data), 'type argument is one of "[yolo voc coco]_bbox" or "mask"'
+        assert set(['yolo_bbox', 'voc_bbox','coco_bbox','polygons','rle']) & set(object_data), 'type argument is one of "[yolo voc coco]_bbox" or "mask"'
         for key in object_data:
             if key=='yolo_bbox':
                 kwdarg = {'yolo_bbox':object_data['yolo_bbox']}

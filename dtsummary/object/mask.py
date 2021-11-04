@@ -33,6 +33,10 @@ class Mask:
                         coco_bbox=coco_bbox
                         )
 
+        self._data = {'label':self.label, 
+                    'confidence':self.confidence, 
+                    'polygons':self.polygons}
+
     def get_mask(self):
         return coco_mask.decode(self.rle)
 
@@ -56,3 +60,6 @@ class Mask:
 
     @property
     def mask(self): return self.get_mask()
+
+    @property
+    def data(self): return self._data

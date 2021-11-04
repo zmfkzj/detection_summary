@@ -12,6 +12,7 @@ from copy import deepcopy
 from functools import reduce
 from dtsummary.util import read_json
 from collections import defaultdict
+from pycocotools.coco import COCO
 
 import chardet
 import json
@@ -112,6 +113,21 @@ class DetectDataset:
         
         with open(root/'detection_result_COCOeval.json','w',encoding='cp949') as f:
             json.dump(dt_results,f,ensure_ascii=False,indent=4)
+
+    def from_coco(self, coco_json_path):
+        coco = COCO(coco_json_path)
+        imgs = coco.imgs
+        labels = coco.cats
+
+        for img in imgs.values():
+            anno_ids = coco.getAnnIds(imgIds=img['id'])
+            objs = []
+            for ann in coco.loadAnns(anno_ids):
+                objs.append(Bbox((img['height'],img['width']),labels[ann['category_id']]['name'],coco_bbox=ann['bbox']).data)
+                # objs.append(Mask((img['height'],img['width']),labels[ann['category_id']]['name'],polygons=ann['segmentation']).data)
+            dt_img = DetectImage(img['file_name'],(img['height'],img['width']),dt_objects_data=objs)
+            self.append(dt_img.data)
+        return self
 
     def to_coco_dataset(self, gt_path='', save_path=''):
         if gt_path:
@@ -227,10 +243,12 @@ class DetectDataset:
     def to_custom_json(self):
         custom_results = []
         for img in self._items:
-            objects = [{'label':obj.label, 
-                        'confidence':obj.confidence, 
-                        'voc_bbox':obj.voc}
+            objects = [(('label',obj.label), 
+                        ('confidence',obj.confidence), 
+                        # (('voc_bbox',obj.voc) if isinstance(obj, Bbox) else ('polygons',obj.polygons)))
+                        ('voc_bbox',obj.voc))
                         for obj in img.dt._items]
+            objects = [dict(obj) for obj in objects]
             custom_result = {'filename':str(Path(img.filename).as_posix()),
                             'image_size': {'height':img.size[0],
                                             'width': img.size[1]},
@@ -307,3 +325,7 @@ coco_result_seg_base = \
         },
         "score": 0.892
     }
+
+if __name__=="__main__":
+    dataset = DetectDataset().from_coco('d:/pano_crop/data/annotations/instances_default.json')
+    dataset.to_custom_json()
