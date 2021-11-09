@@ -8,6 +8,8 @@ from dtsummary.util import json_to_cp949
 import numpy as np
 import pandas as pd
 import tensorflow as tf
+import chardet
+import json
 
 
 class Evaluation:
@@ -18,8 +20,14 @@ class Evaluation:
         self.dataset.to_coco_result(Path(gt_path))
         dt_result_path = self.root/'detection_result_COCOeval.json'
 
-        json_to_cp949(gt_path)
-        coco = COCO(str(gt_path))
+        with open(gt_path,'r+b') as f:
+            encoding = chardet.detect(f.read())['encoding']
+        with open(gt_path,'r',encoding=encoding) as f:
+            dataset = json.load(f)
+
+        coco = COCO()
+        coco.dataset = dataset
+        coco.createIndex()
         dt = coco.loadRes(str(dt_result_path))
         self.eval = COCOeval(coco,dt,type)
         self.imgIds = self.eval.params.imgIds

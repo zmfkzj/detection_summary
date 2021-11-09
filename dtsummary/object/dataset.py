@@ -115,7 +115,16 @@ class DetectDataset:
             json.dump(dt_results,f,ensure_ascii=False,indent=4)
 
     def from_coco(self, coco_json_path):
-        coco = COCO(coco_json_path)
+        coco = COCO()
+        with open(coco_json_path, 'r+b') as f:
+            encoding = chardet.detect(f.read())['encoding']
+        with open(coco_json_path, 'r',encoding=encoding) as f:
+            import json
+            dataset = json.load(f)
+
+        coco.dataset = dataset
+        coco.createIndex()
+
         imgs = coco.imgs
         labels = coco.cats
 
