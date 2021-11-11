@@ -79,8 +79,6 @@ class Evaluation:
             for img in self.eval.evalImgs:
                 if img is None:
                     continue
-                if img['image_id'] == 2:
-                    print()
                 if cat_id!=img['category_id']:
                     continue
                 if img['aRng']!=[0, 10000000000.0]:
@@ -128,7 +126,7 @@ class Evaluation:
                 'dt_img_count': len({ ann['image_id'] for ann in self.eval.cocoDt.loadAnns(self.eval.cocoDt.getAnnIds(imgIds=self.eval.params.imgIds,catIds=param_cat_id)) if ann['score']>=conf_thresh}),
                 'gt_obj_count': len(self.eval.cocoGt.loadAnns(self.eval.cocoGt.getAnnIds(imgIds=self.eval.params.imgIds,catIds=param_cat_id))),
                 'dt_obj_count': len([ann for ann in self.eval.cocoDt.loadAnns(self.eval.cocoDt.getAnnIds(imgIds=self.eval.params.imgIds,catIds=param_cat_id)) if ann['score']>=conf_thresh]),
-                'precision': self.cal_recall(conf_thresh),
+                'precision': self.cal_precision(conf_thresh),
                 'recall': self.cal_recall(conf_thresh),
                 }
             evals.update(area_describ_dict)
