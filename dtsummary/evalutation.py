@@ -147,8 +147,9 @@ class Evaluation:
 
     def _eval_images(self,conf_thresh):
         evals_df = pd.DataFrame()
-        param_catIds = { self.eval.cocoGt.loadCats(i)[0]['name']:[i] for i in self.catIds }
-        param_catIds.update({'all_classes':[]})
+        # param_catIds = { self.eval.cocoGt.loadCats(i)[0]['name']:[i] for i in self.catIds }
+        # param_catIds.update({'all_classes':[]})
+        param_catIds = {'all_classes':[]}
         conf_id = int(conf_thresh*100)
         for label_name,param_cat_id in param_catIds.items():
             cat_img_Ids = self.eval.cocoGt.getImgIds(catIds=param_cat_id) if label_name!='all_classes' else self.imgIds.copy()
