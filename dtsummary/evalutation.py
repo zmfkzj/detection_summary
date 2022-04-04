@@ -8,6 +8,7 @@ from dtsummary.util import json_to_cp949
 import numpy as np
 import pandas as pd
 import tensorflow as tf
+import tensorflow.keras as keras
 import chardet
 import json
 
@@ -43,6 +44,7 @@ class Evaluation:
         iou_thresh_dict = {val:idx for idx,val in enumerate(np.arange(0.5,1,0.05))}
 
         r = tf.metrics.Recall(thresholds=conf_thresh)
+        keras.backend.clear_session()
         cats = self.eval.cocoGt.cats
         recalls = -np.ones(len(cats))
         for cat_id in self.eval.params.catIds:
@@ -71,6 +73,7 @@ class Evaluation:
         iou_thresh_dict = {val:idx for idx,val in enumerate(np.arange(0.5,1,0.05))}
 
         p = tf.metrics.Precision(thresholds=conf_thresh)
+        keras.backend.clear_session()
         cats = self.eval.cocoGt.cats
         precisions = -np.ones(len(cats))
         for cat_id in self.eval.params.catIds:

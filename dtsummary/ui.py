@@ -79,26 +79,27 @@ class WindowClass(QMainWindow, Ui_MainWindow):
             elif self.tag=='object':
                 tag = True
 
+            def draw_object(anno, kind, dataset):
+                assert kind in ['gt', 'dt']
+                linestyle = getattr(self,f'{kind}line_style')
+                fill = getattr(self,f'{kind}fill')
+                cat = dataset.loadCats(ids=anno['category_id'])[0]['name']
+                if (linestyle!='no') | fill:
+                    if self.eval_type=='segm' and bool(anno['segmentation']):
+                        mask = Mask(image_size,polygons=anno['segmentation'])
+                        for polygon in mask.polygons:
+                            ddt_img.drawSeg(cat,polygon,linestyle,fill,mask=mask.mask)
+                    elif (self.eval_type=='bbox'):
+                        # if not anno['segmentation']:
+                        ddt_img.drawBbox(cat,Bbox(image_size,coco_bbox=anno['bbox']).voc,linestyle,fill, tag=tag, preffix=str(anno['id']))
+
             #draw gt
             for anno in gt_annos:
-                cat = gt.loadCats(ids=anno['category_id'])[0]['name']
-                if self.eval_type=='segm':
-                    mask = Mask(image_size,polygons=anno['segmentation'])
-                    for polygon in mask.polygons:
-                        ddt_img.drawSeg(cat,polygon,self.gtline_style,self.gtfill,mask=mask.mask)
-                elif (self.eval_type=='bbox') & ((self.gtline_style!='no') | self.gtfill):
-                    ddt_img.drawBbox(cat,Bbox(image_size,coco_bbox=anno['bbox']).voc,self.gtline_style,self.gtfill, tag=tag, preffix=str(anno['id']))
+                draw_object(anno,'gt', gt)
             #draw dt
             for anno in dt_annos:
-                if anno['score']<float(self.conf_thresh.text()):
-                    continue
-                cat = dt.loadCats(ids=anno['category_id'])[0]['name']
-                if self.eval_type=='segm':
-                    mask = Mask(image_size,polygons=anno['segmentation'])
-                    for polygon in mask.polygons:
-                        ddt_img.drawSeg(cat,polygon,self.dtline_style,self.dtfill,mask=mask.mask)
-                elif (self.eval_type=='bbox') & ((self.dtline_style!='no') | self.dtfill):
-                    ddt_img.drawBbox(cat,Bbox(image_size,coco_bbox=anno['bbox']).voc,self.dtline_style,self.dtfill, tag=tag, preffix=str(anno['id']))
+                if anno['score']>=float(self.conf_thresh.text()):
+                    draw_object(anno,'dt', dt)
 
             #draw sign
             if self.gt_sign.isChecked():

@@ -181,7 +181,7 @@ class DetectDataset:
                 new_annotations['area'] = anno.area_a
                 new_base['annotations'].append(new_annotations)
         
-        with open(root/'detection_result_coco_format.json','w') as f:
+        with open(root/'detection_result_coco_format.json','w',encoding='utf-8') as f:
             json.dump(new_base,f,ensure_ascii=False,indent=4)
 
     def _to_coco_dataset_with_gt(self, gt_path):
