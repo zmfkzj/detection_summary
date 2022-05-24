@@ -1,26 +1,21 @@
 import setuptools
-from subprocess import check_call
-import os.path as osp
-from pathlib import Path
 
 install_requires = \
     [
-        'pycocotools ;platform_system!="Windows"',
-        'pycocotools-windows ;platform_system=="Windows"',
+        'pycocotools',
         'chardet',
         'imantics',
         'pandas',
         'openpyxl',
+        'opencv-python',
         'ddt @ git+https://github.com/zmfkzj/draw_detection',
         'pyside6 ;platform_system!="darwin"',
         'tensorflow>=2.5.0 ;platform_system!="darwin"'
     ]
 
-root = Path(__file__).parent
-check_call("conda install -y --file".split()+[str(root/"requirements.txt")])
 setuptools.setup(
     name="dtsummary",
-    version="1.1.4",
+    version="1.1.5",
     author="zmfkzj",
     author_email="qlwlal@naver.com",
     description="디텍션 결과를 정리하기 위한 모듈",
